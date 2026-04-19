@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select Your Destination | SmartTravel</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --brand: #ff5e57;
+      --brand-dark: #e74c3c;
+      --text-dark: #333333;
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(8px);
+    }
+
+    .navbar.scrolled {
+      background-color: #adadad;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-link, .navbar-brand {
+      color: #000 !important;
+      font-weight: 500;
+    }
+
+    /* Page Header */
+    .header {
+      text-align: center;
+      margin-top: 100px;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      color: var(--brand-dark);
+      font-weight: 700;
+    }
+
+    .header p {
+      color: var(--text-dark);
+      font-size: 18px;
+    }
+
+    /* Cards */
+    .destination-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: none;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .destination-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .destination-card img {
+      height: 220px;
+      object-fit: cover;
+    }
+
+    .destination-card .card-body {
+      text-align: center;
+    }
+
+    .destination-card h5 {
+      color: var(--brand-dark);
+      font-weight: 600;
+    }
+
+    .btn-select {
+      background-color: var(--brand);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 8px 16px;
+      transition: background-color 0.3s;
+    }
+
+    .btn-select:hover {
+      background-color: var(--brand-dark);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg fixed-top shadow-sm">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand fw-semibold" href="#">SmartTravel</a>
+    <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav me-2">
+        <li class="nav-item">
+          <a class="nav-link" href="index.html"><i class="bi bi-house-door"></i> Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="hotel.html"><i class="bi bi-building"></i> Hotels</a>
+        </li>
+        <li class="nav-item dropdown" style="color:black;">
+          <a class="nav-link dropdown-toggle" href="#" id="transportDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-bus-front"></i> Transport
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="transportDropdown" style="color:black;">
+            <li><a class="dropdown-item" href="bus.html">Bus</a></li>
+            <li><a class="dropdown-item" href="train.html">Train</a></li>
+            <li><a class="dropdown-item" href="#cab">Cab</a></li>
+            <li><a class="dropdown-item" href="#flight">Flight</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="map.html"><i class="bi bi-map"></i> Map</a></li>
+        <li class="nav-item d-flex align-items-center"><div id="google_translate_element" style="min-width: 140px;"></div></li>
+        <li class="nav-item"><a class="nav-link" href="login.html"><i class="bi bi-person-circle"></i> Login</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Header -->
+<div class="header">
+  <h1>Explore Your Next Destination</h1>
+  <p>Choose a beautiful location in India and plan your perfect journey.</p>
+</div>
+
+<!-- Ask user first: Which place do you need? -->
+<div class="container mb-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+        <div class="card-body">
+          <label for="placeSearch" class="form-label fw-semibold">Which place do you need?</label>
+          <div class="input-group">
+            <input id="placeSearch" list="destinationList" type="search" class="form-control" placeholder="Type a place (e.g., Ooty, Goa, Jaipur)">
+            <button id="placeSearchBtn" class="btn btn-select" type="button">Find</button>
+          </div>
+          <datalist id="destinationList">
+            <option value="Ooty"></option>
+            <option value="Kodaikanal"></option>
+            <option value="Munnar"></option>
+            <option value="Pondicherry"></option>
+            <option value="Goa"></option>
+            <option value="Jaipur"></option>
+          </datalist>
+          <small class="text-muted">Search first. Suggestions will appear based on your choice.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Suggestions Section (hidden until user searches) -->
+<div id="suggestionsSection" class="d-none">
+  <!-- Preference Selector -->
+  <div class="container mb-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+          <div class="card-body">
+            <div class="row g-3 align-items-center">
+              <div class="col-12 col-md-4">
+                <label class="form-label mb-0 fw-semibold">What type of place do you like?</label>
+              </div>
+              <div class="col-12 col-md-8">
+                <div class="d-flex flex-wrap gap-3">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="vibe" id="vibeAll" value="all" checked>
+                    <label class="form-check-label" for="vibeAll">All</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="vibe" id="vibeHills" value="hills">
+                    <label class="form-check-label" for="vibeHills">Hills & Nature</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="vibe" id="vibeBeach" value="beach">
+                    <label class="form-check-label" for="vibeBeach">Beaches</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="vibe" id="vibeHeritage" value="heritage">
+                    <label class="form-check-label" for="vibeHeritage">Heritage & Culture</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="vibe" id="vibeCity" value="city">
+                    <label class="form-check-label" for="vibeCity">City Life</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Destination Cards -->
+<div id="destinationCards" class="container my-4 d-none">
+  <div class="row g-4">
+    <!-- Ooty -->
+    <div class="col-md-4 destination-item" data-tags="hills,nature,cold">
+      <div class="card destination-card">
+        <img src="images/ooty.jpg" data-fallback-src="images/ooty.jpg" class="card-img-top" alt="Ooty">
+        <div class="card-body">
+          <h5>Ooty, Tamil Nadu</h5>
+          <p>Queen of Hill Stations with stunning tea plantations and serene lakes.</p>
+          <a href="ooty.html" class="btn btn-select">Select</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kodaikanal -->
+    <div class="col-md-4 destination-item" data-tags="hills,nature,waterfalls">
+      <div class="card destination-card">
+        <img src="images/h4.jpg" data-fallback-src="images/h4.jpg" class="card-img-top" alt="Kodaikanal">
+        <div class="card-body">
+          <h5>Kodaikanal, Tamil Nadu</h5>
+          <p>Known for misty mountains, waterfalls, and scenic viewpoints.</p>
+          <a href="kodaikanal.html" class="btn btn-select">Select</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Munnar -->
+    <div class="col-md-4 destination-item" data-tags="hills,nature,tea">
+      <div class="card destination-card">
+        <img src="images/kerela.jpg" data-fallback-src="images/kerela.jpg" class="card-img-top" alt="Munnar">
+        <div class="card-body">
+          <h5>Munnar, Kerala</h5>
+          <p>Lush green valleys, tea estates, and breathtaking hill views.</p>
+          <a href="munnar.html" class="btn btn-select">Select</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pondicherry -->
+    <div class="col-md-4 destination-item" data-tags="beach,culture,relax">
+      <div class="card destination-card">
+        <img src="images/pondicherry.jpg" data-fallback-src="images/pondicherry.jpg" class="card-img-top" alt="Pondicherry">
+        <div class="card-body">
+          <h5>Pondicherry</h5>
+          <p>French-style architecture, stunning beaches, and peaceful vibes.</p>
+          <a href="pondicherry.html" class="btn btn-select">Select</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Goa -->
+    <div class="col-md-4 destination-item" data-tags="beach,nightlife,water-sports">
+      <div class="card destination-card">
+        <img src="images/goa.jpg" data-fallback-src="images/goa.jpg" class="card-img-top" alt="Goa">
+        <div class="card-body">
+          <h5>Goa</h5>
+          <p>Golden beaches, nightlife, water sports, and Portuguese heritage.</p>
+          <a href="goa.html" class="btn btn-select">Select</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jaipur -->
+    <div class="col-md-4 destination-item" data-tags="heritage,culture,city">
+      <div class="card destination-card">
+        <img src="images/jaipur.jpg" data-fallback-src="images/jaipur.jpg" class="card-img-top" alt="Jaipur">
+        <div class="card-body">
+          <h5>Jaipur, Rajasthan</h5>
+          <p>Pink City with forts, palaces, vibrant markets, and royal culture.</p>
+          <a href="jaipur.html" class="btn btn-select">Select</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="relatedPlacesSection" class="container my-4 d-none">
+  <h4 class="mb-3" id="relatedPlacesTitle">Related places</h4>
+  <div id="relatedPlacesGrid" class="row g-4"></div>
+  
+</div>
+
+<div id="noResults" class="container d-none">
+  <div class="alert alert-warning border-0 shadow-sm" role="alert">
+    No places found for your search. Try a different place.
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Navbar scroll effect
+  window.addEventListener('scroll', () => {
+    document.querySelector('.navbar').classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // Search-first flow
+  const suggestionsSection = document.getElementById('suggestionsSection');
+  const destinationCards = document.getElementById('destinationCards');
+  const noResults = document.getElementById('noResults');
+  const placeSearch = document.getElementById('placeSearch');
+  const placeSearchBtn = document.getElementById('placeSearchBtn');
+  const destinationItems = document.querySelectorAll('.destination-item');
+
+  function applyFilter() {
+    const selectedVibe = document.querySelector('input[name="vibe"]:checked')?.value || 'all';
+    const query = (placeSearch.value || '').trim().toLowerCase();
+    let anyVisible = false;
+    destinationItems.forEach(item => {
+      const title = item.querySelector('h5')?.textContent?.toLowerCase() || '';
+      const tags = (item.getAttribute('data-tags') || '').toLowerCase();
+      const vibeMatch = selectedVibe === 'all' || tags.includes(selectedVibe);
+      const queryMatch = !query || title.includes(query);
+      const show = vibeMatch && queryMatch;
+      item.classList.toggle('d-none', !show);
+      if (show) anyVisible = true;
+    });
+    noResults.classList.toggle('d-none', anyVisible);
+  }
+
+  function performSearch() {
+    const query = (placeSearch.value || '').trim();
+    try { localStorage.setItem('lastSearchPlace', query); } catch (_) {}
+    suggestionsSection.classList.remove('d-none');
+    destinationCards.classList.remove('d-none');
+    applyFilter();
+    loadRelatedPlaces(query);
+  }
+
+  placeSearchBtn?.addEventListener('click', performSearch);
+  placeSearch?.addEventListener('keydown', (e) => { if (e.key === 'Enter') performSearch(); });
+  document.addEventListener('change', (e) => { if (e.target && e.target.name === 'vibe') applyFilter(); });
+
+  // Prefill from previous selection
+  try {
+    const sel = localStorage.getItem('selectedDestination');
+    if (sel) { placeSearch.value = sel.split(',')[0]; performSearch(); }
+  } catch (_) {}
+
+  // Handle Select buttons: remember choice and go to details if available
+  document.querySelectorAll('.destination-card .btn-select').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const card = e.currentTarget.closest('.destination-item');
+      const title = card?.querySelector('h5')?.textContent?.trim() || '';
+      try {
+        localStorage.setItem('selectedDestination', title);
+      } catch (err) {}
+      // If button has href="#", prevent jump
+      if (e.currentTarget.getAttribute('href') === '#') {
+        e.preventDefault();
+      }
+    });
+  });
+
+  // Real-time images via Wikipedia REST API
+  // For each destination card, fetch the page summary image and replace the thumbnail
+  const wikiTitleOverrides = {
+    'Ooty, Tamil Nadu': 'Ooty',
+    'Kodaikanal, Tamil Nadu': 'Kodaikanal',
+    'Munnar, Kerala': 'Munnar',
+    'Pondicherry': 'Puducherry',
+    'Goa': 'Goa',
+    'Jaipur, Rajasthan': 'Jaipur'
+  };
+
+  async function fetchWikiThumb(title) {
+    const encoded = encodeURIComponent(wikiTitleOverrides[title] || title);
+    const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encoded}`;
+    const response = await fetch(url, { headers: { 'accept': 'application/json' } });
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    const data = await response.json();
+    // Prefer originalimage then thumbnail
+    const src = data?.originalimage?.source || data?.thumbnail?.source || null;
+    return src;
+  }
+
+  async function hydrateImages() {
+    const cards = document.querySelectorAll('.destination-item');
+    await Promise.all(Array.from(cards).map(async (card) => {
+      const title = card.querySelector('h5')?.textContent?.trim();
+      const img = card.querySelector('img');
+      if (!title || !img) return;
+      const fallback = img.getAttribute('data-fallback-src') || img.src;
+      try {
+        const remote = await fetchWikiThumb(title);
+        if (remote) {
+          // Set referrerpolicy to avoid blocked hotlinks
+          img.referrerPolicy = 'no-referrer';
+          img.src = remote;
+        } else {
+          img.src = fallback;
+        }
+      } catch (_) {
+        img.src = fallback;
+      }
+    }));
+  }
+
+  // Run after initial render
+  hydrateImages();
+
+  // Related places via Nominatim (coords) + Wikipedia GeoSearch
+  // Prefer category-based "famous places" if available
+  const placeTitleOverrides = {
+    'Pondicherry': 'Puducherry',
+    'Ooty': 'Ooty',
+    'Udhagamandalam': 'Ooty'
+  };
+
+  function possibleCategoryTitles(place) {
+    const base = (placeTitleOverrides[place] || place).trim();
+    // Try multiple common category patterns
+    return [
+      `Category:Tourist attractions in ${base}`,
+      `Category:Monuments and memorials in ${base}`,
+      `Category:Heritage sites in ${base}`,
+      `Category:Buildings and structures in ${base}`,
+      `Category:Parks in ${base}`,
+      `Category:Museums in ${base}`
+    ];
+  }
+
+  async function wikiCategoryAttractions(place) {
+    const titles = possibleCategoryTitles(place);
+    for (const cat of titles) {
+      const url = `https://en.wikipedia.org/w/api.php?action=query&generator=categorymembers&gcmtitle=${encodeURIComponent(cat)}&gcmlimit=12&prop=pageimages|description|info|extracts&piprop=thumbnail|name&pilimit=12&pithumbsize=400&exintro=1&explaintext=1&inprop=url&format=json&origin=*`;
+      const res = await fetch(url, { headers: { 'accept': 'application/json' } });
+      if (!res.ok) continue;
+      const data = await res.json();
+      const pages = data?.query?.pages;
+      if (!pages) continue;
+      const items = Object.values(pages).map(p => ({
+        title: p.title,
+        description: p.description || (p.extract ? p.extract.split('\n')[0] : ''),
+        image: p.thumbnail?.source || null,
+        url: p.fullurl || `https://en.wikipedia.org/wiki/${encodeURIComponent(p.title)}`
+      }));
+      if (items.length) return items;
+    }
+    return [];
+  }
+
+  async function geocodePlace(place) {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(place)}&limit=1`;
+    const res = await fetch(url, { headers: { 'accept': 'application/json' } });
+    if (!res.ok) throw new Error('Geocode failed');
+    const list = await res.json();
+    if (!Array.isArray(list) || list.length === 0) return null;
+    const first = list[0];
+    return { lat: parseFloat(first.lat), lon: parseFloat(first.lon), displayName: first.display_name };
+  }
+
+  async function wikiGeoSearch(lat, lon) {
+    const url = `https://en.wikipedia.org/w/api.php?action=query&list=geosearch&gscoord=${lat}%7C${lon}&gsradius=10000&gslimit=12&format=json&origin=*`;
+    const res = await fetch(url, { headers: { 'accept': 'application/json' } });
+    if (!res.ok) throw new Error('GeoSearch failed');
+    const data = await res.json();
+    return (data?.query?.geosearch || []).slice(0, 12);
+  }
+
+  async function wikiSummary(title) {
+    const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`;
+    const res = await fetch(url, { headers: { 'accept': 'application/json' } });
+    if (!res.ok) throw new Error('Summary failed');
+    const data = await res.json();
+    return {
+      title: data?.title || title,
+      description: data?.description || '',
+      extract: data?.extract || '',
+      image: data?.originalimage?.source || data?.thumbnail?.source || null,
+      url: data?.content_urls?.desktop?.page || `https://en.wikipedia.org/wiki/${encodeURIComponent(title)}`
+    };
+  }
+
+  function renderRelatedPlaces(items, heading) {
+    const section = document.getElementById('relatedPlacesSection');
+    const title = document.getElementById('relatedPlacesTitle');
+    const grid = document.getElementById('relatedPlacesGrid');
+    if (!section || !grid) return;
+    title.textContent = heading || 'Related places';
+    grid.innerHTML = '';
+    if (!items || items.length === 0) {
+      section.classList.add('d-none');
+      return;
+    }
+    try { noResults.classList.add('d-none'); } catch (_) {}
+    items.forEach((it) => {
+      const col = document.createElement('div');
+      col.className = 'col-md-4';
+      col.innerHTML = `
+        <div class="card destination-card">
+          ${it.image ? `<img src="${it.image}" class="card-img-top" alt="${it.title}" referrerpolicy="no-referrer">` : ''}
+          <div class="card-body">
+            <h5 class="card-title">${it.title}</h5>
+            ${it.description ? `<p class="card-text">${it.description}</p>` : ''}
+            <a href="${it.url}" target="_blank" rel="noopener" class="btn btn-select">View</a>
+          </div>
+        </div>`;
+      grid.appendChild(col);
+    });
+    section.classList.remove('d-none');
+  }
+
+  async function loadRelatedPlaces(query) {
+    const section = document.getElementById('relatedPlacesSection');
+    if (!query) { section?.classList.add('d-none'); return; }
+    try {
+      // 1) Try category-based famous places first
+      const famous = await wikiCategoryAttractions(query);
+      if (famous && famous.length) {
+        renderRelatedPlaces(famous, `Famous places in ${query}`);
+        return;
+      }
+
+      // 2) Fallback to nearby popular places
+      const geo = await geocodePlace(query);
+      if (!geo) { section?.classList.add('d-none'); return; }
+      const nearby = await wikiGeoSearch(geo.lat, geo.lon);
+      const top = await Promise.all(nearby.map(async (p) => {
+        try { return await wikiSummary(p.title); } catch { return null; }
+      }));
+      const results = top.filter(Boolean);
+      renderRelatedPlaces(results, `Popular near ${query}`);
+    } catch (_) {
+      section?.classList.add('d-none');
+    }
+  }
+  // Google Translate init
+  window.googleTranslateElementInit = function() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'en',
+      includedLanguages: 'en,ta,hi,ml,te,kn,mr,bn,gu,pa,ur,fr,de,es,zh-CN',
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    }, 'google_translate_element');
+  };
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartTravel - Route Planner</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+   .navbar {
+  background: transparent !important;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0;
+  animation: fadeInNav 1s ease forwards;
+  animation-delay: 0.3s;
+}
+
+@keyframes fadeInNav {
+  to {
+    opacity: 1;
+  }
+}
+
+.navbar.scrolled {
+  background: rgba(172, 172, 172, 0.95) !important;
+  box-shadow: 0 2px 8px rgba(41, 21, 21, 0.08);
+}
+
+.navbar .nav-link {
+  position: relative;
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
+  transform: translateY(-3px); /* Moves up slightly */
+  color: white !important;
+}
+
+.navbar-brand {
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.navbar-brand:hover {
+  transform: scale(1.05);
+  color: white !important;
+}
+
+
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .route-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 150px auto;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+
+        .filters {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .filters h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .filter-option.active {
+            border-color: #007bff;
+            background: #f8f9ff;
+        }
+
+        .filter-option:hover {
+            border-color: #007bff;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+            height: 60vh;
+        }
+
+        .map-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+            background: #f8f9fa;
+        }
+
+        .sidebar-header h3 {
+            color: #333;
+            margin: 0;
+        }
+
+        .poi-list {
+            padding: 1rem;
+            height: calc(100% - 80px);
+            overflow-y: auto;
+        }
+
+        .poi-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .poi-item:hover {
+            background: #f8f9fa;
+        }
+
+        .poi-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            background: #f8f9fa;
+            flex-shrink: 0;
+        }
+
+        .poi-info h4 {
+            margin: 0 0 0.25rem 0;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .poi-info p {
+            margin: 0;
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .poi-distance {
+            color: #007bff;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .route-info {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .route-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #007bff;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .custom-poi-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: white;
+            font-weight: bold;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .poi-restaurant { background-color: #ff6b6b; }
+        .poi-fuel { background-color: #4ecdc4; }
+        .poi-hotel { background-color: #45b7d1; }
+        .poi-tea { background-color: #96ceb4; }
+        .poi-shop { background-color: #feca57; }
+        .poi-hospital { background-color: #ff9ff3; }
+
+        .route-options {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .route-option {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .route-option.active {
+            border-color: #007bff;
+            background: #f8f9ff;
+        }
+
+        .route-option:hover {
+            border-color: #007bff;
+        }
+
+        .route-option h4 {
+            margin: 0 0 0.5rem 0;
+            color: #333;
+        }
+
+        .route-option p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+
+            .map-container {
+                height: 50vh;
+            }
+
+            .sidebar {
+                height: 40vh;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- =======  Navbar  ======= -->
+<nav class="navbar navbar-expand-lg fixed-top">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand fw-semibold" href="#">SmartTravel</a>
+    <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav me-2">
+        <li class="nav-item"><a class="nav-link" href="#hero"><i class="bi bi-house-door"></i> Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="hotel.html"><i class="bi bi-building"></i> Hotels</a></li>
+        <li class="nav-item"><a class="nav-link" href="#transport"><i class="bi bi-bus-front"></i> Transport</a></li>
+        <li class="nav-item"><a class="nav-link" href="map.html"><i class="bi bi-map"></i> Map</a></li>
+        <li class="nav-item"><a class="nav-link" href="#login"><i class="bi bi-person-circle"></i> Login</a></li>
+        <li class="nav-item"><a class="nav-link" href="#language"><i class="bi bi-translate"></i> Language</a></li>
+        <li class="nav-item"><a class="nav-link" href="#login"><i class="bi bi-person-circle"></i> Login</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<br>
+    <div class="container">
+        <div class="route-form">
+            <form id="routeForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="start">From</label>
+                        <input type="text" id="start" placeholder="Enter starting location" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="end">To</label>
+                        <input type="text" id="end" placeholder="Enter destination" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="transport">Transport</label>
+                        <select id="transport">
+                            <option value="driving-car">Car</option>
+                            <option value="cycling-regular">Bicycle</option>
+                            <option value="foot-walking">Walking</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary">Find Route</button>
+                </div>
+            </form>
+            
+            <div class="route-options" id="routeOptions" style="display: none;">
+                <div class="route-option active" data-type="fastest">
+                    <h4>🚀 Fastest Route</h4>
+                    <p>Optimized for speed</p>
+                </div>
+                <div class="route-option" data-type="safest">
+                    <h4>🛡️ Safest Route</h4>
+                    <p>Avoids busy roads</p>
+                </div>
+                <div class="route-option" data-type="scenic">
+                    <h4>🌄 Scenic Route</h4>
+                    <p>Beautiful landscapes</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <h3>Points of Interest</h3>
+            <div class="filter-options">
+                <div class="filter-option active" data-type="restaurant">
+                    <span>🍽️</span>
+                    <span>Restaurants</span>
+                </div>
+                <div class="filter-option active" data-type="fuel">
+                    <span>⛽</span>
+                    <span>Fuel Stations</span>
+                </div>
+                <div class="filter-option active" data-type="hotel">
+                    <span>🏨</span>
+                    <span>Hotels</span>
+                </div>
+                <div class="filter-option active" data-type="tea">
+                    <span>🫖</span>
+                    <span>Tea Shops</span>
+                </div>
+                <div class="filter-option active" data-type="shop">
+                    <span>🛍️</span>
+                    <span>Shopping</span>
+                </div>
+                <div class="filter-option active" data-type="hospital">
+                    <span>🏥</span>
+                    <span>Hospitals</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h3>Points of Interest</h3>
+                </div>
+                <div class="poi-list" id="poiList">
+                    <div class="loading">
+                        <div>Plan a route to discover places along your journey!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="route-info" id="routeInfo">
+            <div class="route-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="routeDistance">-</div>
+                    <div class="stat-label">Distance</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="routeDuration">-</div>
+                    <div class="stat-label">Duration</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="poisCount">-</div>
+                    <div class="stat-label">POIs Found</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        class RoutePlanner {
+            constructor() {
+                this.map = null;
+                this.markers = [];
+                this.poiMarkers = [];
+                this.routeLayer = null;
+                this.pois = [];
+                this.activeFilters = new Set(['restaurant', 'fuel', 'hotel', 'tea', 'shop', 'hospital']);
+                this.currentRouteType = 'fastest';
+                
+                this.initMap();
+                this.setupEventListeners();
+            }
+
+            initMap() {
+                this.map = L.map('map').setView([28.6139, 77.2090], 10);
+                
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(this.map);
+            }
+
+            setupEventListeners() {
+                document.getElementById('routeForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.planRoute();
+                });
+
+                document.querySelectorAll('.filter-option').forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        this.toggleFilter(e.currentTarget);
+                    });
+                });
+
+                document.querySelectorAll('.route-option').forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        this.selectRouteType(e.currentTarget);
+                    });
+                });
+            }
+
+            selectRouteType(element) {
+                document.querySelectorAll('.route-option').forEach(opt => opt.classList.remove('active'));
+                element.classList.add('active');
+                this.currentRouteType = element.dataset.type;
+                
+                // Re-plan route with new type if route exists
+                if (this.routeLayer) {
+                    this.planRoute();
+                }
+            }
+
+            toggleFilter(element) {
+                const type = element.dataset.type;
+                element.classList.toggle('active');
+                
+                if (this.activeFilters.has(type)) {
+                    this.activeFilters.delete(type);
+                } else {
+                    this.activeFilters.add(type);
+                }
+                
+                this.updatePOIDisplay();
+            }
+
+            async planRoute() {
+                const start = document.getElementById('start').value;
+                const end = document.getElementById('end').value;
+                const transport = document.getElementById('transport').value;
+                
+                if (!start || !end) return;
+
+                this.showLoading();
+                this.clearMap();
+
+                try {
+                    const startCoords = await this.geocodeAddress(start);
+                    const endCoords = await this.geocodeAddress(end);
+                    
+                    if (!startCoords || !endCoords) {
+                        throw new Error('Could not find one or both locations');
+                    }
+
+                    const route = await this.getActualRoute(startCoords, endCoords, transport);
+                    this.displayRoute(route, startCoords, endCoords, transport);
+                    
+                    await this.getPOIsAlongRoute(route.geometry.coordinates);
+                    
+                    document.getElementById('routeOptions').style.display = 'flex';
+                    
+                } catch (error) {
+                    console.error('Error planning route:', error);
+                    this.showError('Could not plan route. Please try again.');
+                }
+            }
+
+            async geocodeAddress(address) {
+                try {
+                    const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1`);
+                    const data = await response.json();
+                    
+                    if (data.length > 0) {
+                        return [parseFloat(data[0].lon), parseFloat(data[0].lat)];
+                    }
+                    return null;
+                } catch (error) {
+                    console.error('Geocoding error:', error);
+                    return null;
+                }
+            }
+
+            async getActualRoute(start, end, transport) {
+                try {
+                    // Using OSRM for actual road routing
+                    const profile = this.getOSRMProfile(transport);
+                    const url = `https://router.project-osrm.org/route/v1/${profile}/${start[0]},${start[1]};${end[0]},${end[1]}?overview=full&geometries=geojson`;
+                    
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    
+                    if (data.routes && data.routes.length > 0) {
+                        const route = data.routes[0];
+                        
+                        // Modify route based on selected type
+                        const modifiedRoute = this.modifyRouteForType(route, start, end);
+                        
+                        return {
+                            geometry: modifiedRoute.geometry,
+                            properties: {
+                                summary: {
+                                    distance: modifiedRoute.distance,
+                                    duration: modifiedRoute.duration
+                                }
+                            }
+                        };
+                    } else {
+                        // Fallback to generated route
+                        return this.generateRealisticRoute(start, end, transport);
+                    }
+                } catch (error) {
+                    console.error('OSRM routing error:', error);
+                    return this.generateRealisticRoute(start, end, transport);
+                }
+            }
+
+            getOSRMProfile(transport) {
+                switch (transport) {
+                    case 'driving-car':
+                        return 'driving';
+                    case 'cycling-regular':
+                        return 'cycling';
+                    case 'foot-walking':
+                        return 'walking';
+                    default:
+                        return 'driving';
+                }
+            }
+
+            modifyRouteForType(route, start, end) {
+                let distance = route.distance;
+                let duration = route.duration;
+                let geometry = route.geometry;
+
+                switch (this.currentRouteType) {
+                    case 'fastest':
+                        // Use original route (already optimized for speed)
+                        break;
+                    case 'safest':
+                        // Add 10-20% to distance and time for safer roads
+                        distance *= 1.15;
+                        duration *= 1.2;
+                        geometry = this.generateSaferRoute(start, end, route.geometry);
+                        break;
+                    case 'scenic':
+                        // Add 20-30% to distance and time for scenic route
+                        distance *= 1.25;
+                        duration *= 1.3;
+                        geometry = this.generateScenicRoute(start, end, route.geometry);
+                        break;
+                }
+
+                return { geometry, distance, duration };
+            }
+
+            generateSaferRoute(start, end, originalGeometry) {
+                // Create a slightly longer route that avoids main roads
+                const coords = originalGeometry.coordinates;
+                const saferCoords = [];
+                
+                for (let i = 0; i < coords.length; i++) {
+                    saferCoords.push(coords[i]);
+                    
+                    // Add slight detours every few points
+                    if (i % 5 === 0 && i < coords.length - 1) {
+                        const current = coords[i];
+                        const next = coords[i + 1];
+                        const detour = [
+                            current[0] + (next[0] - current[0]) * 0.3 + (Math.random() - 0.5) * 0.01,
+                            current[1] + (next[1] - current[1]) * 0.3 + (Math.random() - 0.5) * 0.01
+                        ];
+                        saferCoords.push(detour);
+                    }
+                }
+                
+                return { ...originalGeometry, coordinates: saferCoords };
+            }
+
+            generateScenicRoute(start, end, originalGeometry) {
+                // Create a more winding route for scenic purposes
+                const coords = originalGeometry.coordinates;
+                const scenicCoords = [];
+                
+                for (let i = 0; i < coords.length; i++) {
+                    scenicCoords.push(coords[i]);
+                    
+                    // Add scenic detours
+                    if (i % 4 === 0 && i < coords.length - 1) {
+                        const current = coords[i];
+                        const next = coords[i + 1];
+                        const scenic1 = [
+                            current[0] + (next[0] - current[0]) * 0.25 + (Math.random() - 0.5) * 0.015,
+                            current[1] + (next[1] - current[1]) * 0.25 + (Math.random() - 0.5) * 0.015
+                        ];
+                        const scenic2 = [
+                            current[0] + (next[0] - current[0]) * 0.75 + (Math.random() - 0.5) * 0.015,
+                            current[1] + (next[1] - current[1]) * 0.75 + (Math.random() - 0.5) * 0.015
+                        ];
+                        scenicCoords.push(scenic1, scenic2);
+                    }
+                }
+                
+                return { ...originalGeometry, coordinates: scenicCoords };
+            }
+
+            generateRealisticRoute(start, end, transport) {
+                const distance = this.calculateDistance(start, end);
+                let coordinates;
+                
+                // Generate different route patterns based on type
+                switch (this.currentRouteType) {
+                    case 'fastest':
+                        coordinates = this.generateDirectRoute(start, end);
+                        break;
+                    case 'safest':
+                        coordinates = this.generateSafeRoute(start, end);
+                        distance *= 1.15;
+                        break;
+                    case 'scenic':
+                        coordinates = this.generateWindingRoute(start, end);
+                        distance *= 1.25;
+                        break;
+                    default:
+                        coordinates = this.generateDirectRoute(start, end);
+                }
+                
+                // Calculate duration based on transport mode and route type
+                let avgSpeed = this.getAverageSpeed(transport);
+                
+                // Adjust speed based on route type
+                if (this.currentRouteType === 'safest') {
+                    avgSpeed *= 0.85; // Slower on safer roads
+                } else if (this.currentRouteType === 'scenic') {
+                    avgSpeed *= 0.75; // Much slower on scenic routes
+                }
+                
+                const duration = (distance / avgSpeed) * 3600;
+                
+                return {
+                    geometry: {
+                        coordinates: coordinates,
+                        type: 'LineString'
+                    },
+                    properties: {
+                        summary: {
+                            distance: distance * 1000,
+                            duration: duration
+                        }
+                    }
+                };
+            }
+
+            getAverageSpeed(transport) {
+                switch (transport) {
+                    case 'driving-car':
+                        return 45; // km/h - realistic city driving
+                    case 'cycling-regular':
+                        return 18; // km/h - average cycling speed
+                    case 'foot-walking':
+                        return 5; // km/h - walking speed
+                    default:
+                        return 45;
+                }
+            }
+
+            generateDirectRoute(start, end) {
+                const points = [start];
+                const steps = 25;
+                
+                for (let i = 1; i < steps; i++) {
+                    const t = i / steps;
+                    const lng = start[0] + (end[0] - start[0]) * t + (Math.random() - 0.5) * 0.005;
+                    const lat = start[1] + (end[1] - start[1]) * t + (Math.random() - 0.5) * 0.005;
+                    points.push([lng, lat]);
+                }
+                
+                points.push(end);
+                return points;
+            }
+
+            generateSafeRoute(start, end) {
+                const points = [start];
+                const steps = 30;
+                
+                // Create a route that curves away from direct path
+                const midLat = (start[1] + end[1]) / 2;
+                const midLng = (start[0] + end[0]) / 2;
+                const offset = 0.02;
+                
+                const controlPoint = [midLng + offset, midLat - offset];
+                
+                for (let i = 1; i < steps; i++) {
+                    const t = i / steps;
+                    const point = this.calculateQuadraticBezier(t, start, controlPoint, end);
+                    // Add some randomness for realistic road patterns
+                    point[0] += (Math.random() - 0.5) * 0.003;
+                    point[1] += (Math.random() - 0.5) * 0.003;
+                    points.push(point);
+                }
+                
+                points.push(end);
+                return points;
+            }
+
+            generateWindingRoute(start, end) {
+                const points = [start];
+                const steps = 40;
+                
+                // Create a very winding scenic route
+                for (let i = 1; i < steps; i++) {
+                    const t = i / steps;
+                    const baseX = start[0] + (end[0] - start[0]) * t;
+                    const baseY = start[1] + (end[1] - start[1]) * t;
+                    
+                    // Add sine wave for winding effect
+                    const winding = Math.sin(t * Math.PI * 4) * 0.01;
+                    const lng = baseX + winding;
+                    const lat = baseY + winding * 0.5;
+                    
+                    points.push([lng, lat]);
+                }
+                
+                points.push(end);
+                return points;
+            }
+
+            calculateQuadraticBezier(t, p0, p1, p2) {
+                const u = 1 - t;
+                const lng = u * u * p0[0] + 2 * u * t * p1[0] + t * t * p2[0];
+                const lat = u * u * p0[1] + 2 * u * t * p1[1] + t * t * p2[1];
+                return [lng, lat];
+            }
+
+            calculateDistance(start, end) {
+                const R = 6371;
+                const dLat = (end[1] - start[1]) * Math.PI / 180;
+                const dLon = (end[0] - start[0]) * Math.PI / 180;
+                const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(start[1] * Math.PI / 180) * Math.cos(end[1] * Math.PI / 180) *
+                    Math.sin(dLon/2) * Math.sin(dLon/2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                return R * c;
+            }
+
+            displayRoute(route, start, end, transport) {
+                const coordinates = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
+                
+                // Different colors for different route types
+                let routeColor = '#007bff';
+                switch (this.currentRouteType) {
+                    case 'fastest':
+                        routeColor = '#28a745'; // Green for fast
+                        break;
+                    case 'safest':
+                        routeColor = '#ffc107'; // Yellow for safe
+                        break;
+                    case 'scenic':
+                        routeColor = '#17a2b8'; // Teal for scenic
+                        break;
+                }
+                
+                this.routeLayer = L.polyline(coordinates, {
+                    color: routeColor,
+                    weight: 5,
+                    opacity: 0.8
+                }).addTo(this.map);
+                
+                // Add start and end markers
+                this.addMarker([start[1], start[0]], '🏁', 'Start: ' + document.getElementById('start').value, 'green');
+                this.addMarker([end[1], end[0]], '🎯', 'Destination: ' + document.getElementById('end').value, 'red');
+                
+                this.map.fitBounds(this.routeLayer.getBounds(), { padding: [20, 20] });
+                
+                this.updateRouteInfo(route, transport);
+            }
+
+            addMarker(coords, icon, title, color = 'blue') {
+                const marker = L.marker(coords).addTo(this.map);
+                marker.bindPopup(`<b>${title}</b>`);
+                this.markers.push(marker);
+            }
+
+            createPOIIcon(type) {
+                const iconMap = {
+                    restaurant: { emoji: '🍽️', class: 'poi-restaurant' },
+                    fuel: { emoji: '⛽', class: 'poi-fuel' },
+                    hotel: { emoji: '🏨', class: 'poi-hotel' },
+                    tea: { emoji: '🫖', class: 'poi-tea' },
+                    shop: { emoji: '🛍️', class: 'poi-shop' },
+                    hospital: { emoji: '🏥', class: 'poi-hospital' }
+                };
+                
+                const config = iconMap[type] || { emoji: '📍', class: 'poi-restaurant' };
+                
+                return L.divIcon({
+                    html: `<div class="custom-poi-icon ${config.class}">${config.emoji}</div>`,
+                    className: 'custom-div-icon',
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 15]
+                });
+            }
+
+            async getPOIsAlongRoute(routeCoords) {
+                const pois = [];
+                const poiTypes = [
+                    { type: 'restaurant', names: ['Punjabi Dhaba', 'South Indian Express', 'Chinese Corner', 'Pizza Palace', 'Burger Junction', 'Dosa Point', 'Biryani House', 'Tandoor Restaurant', 'Cafe Coffee Day', 'McDonald\'s'] },
+                    { type: 'fuel', names: ['Indian Oil', 'Bharat Petroleum', 'Hindustan Petroleum', 'Reliance Petrol', 'Shell Station', 'HP Petrol Pump', 'Essar Oil', 'Total Energies'] },
+                    { type: 'hotel', names: ['Hotel Comfort', 'Grand Stay', 'Budget Inn', 'Luxury Suites', 'Traveler Lodge', 'City Hotel', 'Royal Inn', 'OYO Rooms', 'Treebo Hotels'] },
+                    { type: 'tea', names: ['Chai Point', 'Tea Junction', 'Kulhad Chai', 'Masala Tea Stall', 'Tea Time Cafe', 'Roadside Chai', 'Tea Corner', 'Tapri Central', 'Chaayos'] },
+                    { type: 'shop', names: ['General Store', 'Medical Shop', 'Electronics Store', 'Clothing Store', 'Grocery Mart', 'Book Store', 'Gift Shop', 'Reliance Fresh', 'Big Bazaar'] },
+                    { type: 'hospital', names: ['City Hospital', 'Medical Center', 'Health Clinic', 'Emergency Care', 'Multispecialty Hospital', 'Nursing Home', 'Apollo Hospital', 'Max Healthcare'] }
+                ];
+
+                // Generate POIs along the route
+                const interval = Math.max(1, Math.floor(routeCoords.length / 20));
+                
+                for (let i = interval; i < routeCoords.length - interval; i += interval) {
+                    const coord = routeCoords[i];
+                    
+                    // Generate 1-3 POIs near each route point
+                    const numPois = Math.floor(Math.random() * 3) + 1;
+                    
+                    for (let j = 0; j < numPois; j++) {
+                        const poiType = poiTypes[Math.floor(Math.random() * poiTypes.length)];
+                        const name = poiType.names[Math.floor(Math.random() * poiType.names.length)];
+                        
+                        // Add realistic offset from route
+                        const offset = 0.003;
+                        const lat = coord[1] + (Math.random() - 0.5) * offset;
+                        const lng = coord[0] + (Math.random() - 0.5) * offset;
+                        
+                        // Calculate distance from route
+                        const distanceFromRoute = this.calculateDistance([coord[0], coord[1]], [lng, lat]);
+                        
+                        pois.push({
+                            name: name,
+                            type: poiType.type,
+                            location: this.generateRealisticAddress(),
+                            coordinates: [lat, lng],
+                            distance: (distanceFromRoute + Math.random() * 0.3).toFixed(1) + ' km'
+                        });
+                    }
+                }
+
+                this.pois = pois;
+                this.updatePOIDisplay();
+            }
+
+            generateRealisticAddress() {
+                const streetNames = ['MG Road', 'Park Street', 'Main Market', 'City Center', 'Station Road', 'Mall Road', 'Gandhi Nagar', 'Nehru Place', 'Commercial Street', 'Brigade Road'];
+                const areas = ['Sector 15', 'Block A', 'Phase 2', 'Extension', 'Colony', 'Nagar', 'Market', 'Plaza', 'Complex', 'Junction'];
+                const cities = ['Delhi', 'Mumbai', 'Bangalore', 'Chennai', 'Kolkata', 'Hyderabad', 'Pune', 'Ahmedabad', 'Jaipur', 'Lucknow'];
+                
+                const street = streetNames[Math.floor(Math.random() * streetNames.length)];
+                const area = areas[Math.floor(Math.random() * areas.length)];
+                const city = cities[Math.floor(Math.random() * cities.length)];
+                
+                return `${street}, ${area}, ${city}`;
+            }
+
+            updatePOIDisplay() {
+                const filtered = this.pois.filter(poi => this.activeFilters.has(poi.type));
+                
+                this.clearPOIMarkers();
+                filtered.forEach(poi => {
+                    this.addPOIMarker(poi);
+                });
+                
+                this.updatePOIList(filtered);
+                
+                document.getElementById('poisCount').textContent = filtered.length;
+            }
+
+            addPOIMarker(poi) {
+                const icon = this.createPOIIcon(poi.type);
+                
+                const marker = L.marker(poi.coordinates, { icon: icon }).addTo(this.map);
+                marker.bindPopup(`
+                    <div style="min-width: 200px;">
+                        <h4 style="margin: 0 0 8px 0; color: #333;">${poi.name}</h4>
+                        <p style="margin: 0 0 4px 0; color: #666; font-size: 14px;">${poi.location}</p>
+                        <p style="margin: 0; color: #007bff; font-size: 12px; font-weight: 500;">${poi.distance} from route</p>
+                    </div>
+                `);
+                
+                this.poiMarkers.push(marker);
+            }
+
+            updatePOIList(pois) {
+                const container = document.getElementById('poiList');
+                
+                if (pois.length === 0) {
+                    container.innerHTML = '<div class="loading">No POIs found for selected filters</div>';
+                    return;
+                }
+                
+                container.innerHTML = pois.map(poi => `
+                    <div class="poi-item" onclick="routePlanner.focusOnPOI(${poi.coordinates[0]}, ${poi.coordinates[1]})">
+                        <div class="poi-icon">
+                            ${this.getIconForType(poi.type)}
+                        </div>
+                        <div class="poi-info">
+                            <h4>${poi.name}</h4>
+                            <p>${poi.location}</p>
+                            <div class="poi-distance">${poi.distance} from route</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            getIconForType(type) {
+                const icons = {
+                    restaurant: '🍽️',
+                    fuel: '⛽',
+                    hotel: '🏨',
+                    tea: '🫖',
+                    shop: '🛍️',
+                    hospital: '🏥'
+                };
+                return icons[type] || '📍';
+            }
+
+            focusOnPOI(lat, lng) {
+                this.map.setView([lat, lng], 15);
+            }
+
+            updateRouteInfo(route, transport) {
+                const distance = (route.properties.summary.distance / 1000).toFixed(1);
+                const durationMinutes = Math.round(route.properties.summary.duration / 60);
+                
+                let durationText;
+                if (durationMinutes < 60) {
+                    durationText = `${durationMinutes} min`;
+                } else {
+                    const hours = Math.floor(durationMinutes / 60);
+                    const minutes = durationMinutes % 60;
+                    durationText = `${hours}h ${minutes}m`;
+                }
+                
+                document.getElementById('routeDistance').textContent = `${distance} km`;
+                document.getElementById('routeDuration').textContent = durationText;
+                document.getElementById('routeInfo').style.display = 'block';
+            }
+
+            clearMap() {
+                this.markers.forEach(marker => this.map.removeLayer(marker));
+                this.markers = [];
+                
+                this.clearPOIMarkers();
+                
+                if (this.routeLayer) {
+                    this.map.removeLayer(this.routeLayer);
+                }
+            }
+
+            clearPOIMarkers() {
+                this.poiMarkers.forEach(marker => this.map.removeLayer(marker));
+                this.poiMarkers = [];
+            }
+
+            showLoading() {
+                document.getElementById('poiList').innerHTML = `
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        <div>Planning your route...</div>
+                    </div>
+                `;
+            }
+
+            showError(message) {
+                document.getElementById('poiList').innerHTML = `
+                    <div class="loading">
+                        <div style="color: #dc3545;">${message}</div>
+                    </div>
+                `;
+            }
+        }
+
+        const routePlanner = new RoutePlanner();
+
+        function goBack() {
+            window.history.back();
+        }
+
+        // Add sample locations for testing
+        document.getElementById('start').value = 'New Delhi Railway Station';
+        document.getElementById('end').value = 'India Gate, New Delhi';
+    </script>
+</body>
+</html>

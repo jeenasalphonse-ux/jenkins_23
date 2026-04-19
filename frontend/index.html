@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Travel — Home</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    :root {
+      --brand: #ff5e57;
+      --brand-dark: #e74c3c;
+      --text-dark: #333333;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      color: var(--text-dark);
+      background-color: #f8f9fa;
+      overflow-x: hidden;
+    }
+
+    /* =======  Navbar  ======= */
+    .navbar {
+      background: transparent !important;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      animation: fadeInNav 1s ease forwards;
+      animation-delay: 0.3s;
+    }
+
+    @keyframes fadeInNav {
+      to { opacity: 1; }
+    }
+
+    .navbar.scrolled {
+      background: rgba(172, 172, 172, 0.95) !important;
+      box-shadow: 0 2px 8px rgba(41, 21, 21, 0.08);
+    }
+
+    .navbar .nav-link {
+      position: relative;
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .navbar .nav-link:hover,
+    .navbar .nav-link:focus {
+      transform: translateY(-3px);
+      color: white !important;
+    }
+
+    .navbar-brand {
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .navbar-brand:hover {
+      transform: scale(1.05);
+      color: white !important;
+    }
+
+    .dropdown-menu {
+      background-color: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .dropdown-item {
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+
+    .dropdown-item:hover,
+    .dropdown-item:focus {
+      background-color: rgba(255, 255, 255, 0.15);
+      color: white;
+    }
+
+    /* =======  Hero Section  ======= */
+    #hero {
+      height: 100vh;
+      background: url("images/img1.jpg") center/cover no-repeat fixed;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #ffffff;
+    }
+
+    #hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+      padding: 0 15px;
+    }
+
+    .hero-content h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .hero-content p {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .btn-brand {
+      background-color: var(--brand);
+      color: #ffffff;
+      padding: 0.75rem 2rem;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+      animation: pulse 2s infinite;
+    }
+
+    .btn-brand:hover {
+      background-color: var(--brand-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(255, 94, 87, 0.4);
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 94, 87, 0.7); }
+      70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 94, 87, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 94, 87, 0); }
+    }
+
+    /* Feature Cards */
+    .feature-box {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feature-box:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .feature-box h5 {
+      color: var(--brand);
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+     footer {
+      background-color: #101820;
+      color: #ffffff;
+      padding: 3rem 0 1.5rem;
+    }
+    .social-icon {
+      font-size: 1.4rem;
+      margin: 0 0.6rem;
+      color: #ffffff;
+      transition: opacity 0.3s;
+    }
+    .social-icon:hover {
+      opacity: 0.75;
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg fixed-top">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand fw-semibold" href="#">SmartTravel</a>
+    <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav me-2">
+        <li class="nav-item"><a class="nav-link" href="#hero"><i class="bi bi-house-door"></i> Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="hotel.html"><i class="bi bi-building"></i> Hotels</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="transportDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-bus-front"></i> Transport
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="transportDropdown">
+            <li><a class="dropdown-item" href="bus.html"> Bus </a></li>
+            <li><a class="dropdown-item" href="train.html"> Train </a></li>
+            <li><a class="dropdown-item" href="#cab"> Cab </a></li>
+            <li><a class="dropdown-item" href="#flight"> Flight </a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="map.html"><i class="bi bi-map"></i> Map</a></li>
+        <li class="nav-item d-flex align-items-center">
+          <div id="google_translate_element" style="min-width: 140px;"></div>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="login.html"><i class="bi bi-person-circle"></i> Login</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section id="hero">
+  <div class="hero-content">
+    <h1 id="hero-title">Welcome Back, <span id="username">Traveler</span>!</h1>
+    <p>Your AI‑powered companion for personalised itineraries, real‑time updates & unforgettable journeys.</p>
+    <a href="#about" class="btn btn-brand">Explore More</a>
+  </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="container py-5">
+  <h2 class="text-center mb-4 fw-bold">About Smart Travel</h2>
+  <p class="lead text-center mb-5">
+    Smart Travel reimagines trip planning across Tamil Nadu and beyond.
+  </p>
+  <div class="row align-items-center g-4">
+    <div class="col-lg-6 mb-4 mb-lg-0">
+      <h4 class="fw-bold mb-3">Why We Built This</h4>
+      <p style="line-height: 1.8;">
+        The pandemic changed tourism forever. Travellers now demand customised, safe and reliable tools.
+        <strong>Smart Travel</strong> empowers them while uplifting local guides, hotels and cultural hotspots.
+      </p>
+      <h4 class="fw-bold mt-4 mb-3">Who Is It For?</h4>
+      <ul style="line-height: 1.8;">
+        <li>Casual travellers chasing new experiences</li>
+        <li>Staycationers seeking the perfect hotel</li>
+        <li>Students & backpackers exploring on a budget</li>
+        <li>Anyone craving a smoother, smarter adventure</li>
+      </ul>
+    </div>
+    <div class="col-lg-6 text-center">
+      <img src="images/image2.jpg" class="img-fluid rounded shadow" alt="Travel collage" style="width: 450px; height: 350px;">
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="container py-5">
+  <h2 class="text-center mb-4">Our Features</h2>
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="feature-box">
+        <h5>Smart Itinerary Planner</h5>
+        <p>AI‑powered suggestions tailored to your interests, mood & history.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="feature-box">
+        <h5>Live Weather Updates</h5>
+        <p>Real‑time forecasts so every adventure fits the skies.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="feature-box">
+        <h5>AI Mood‑Based Trips</h5>
+        <p>Not sure where to go? Your vibe decides the route.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="text-center py-5 bg-white">
+  <h2 class="mb-3">Plan Your Trip Now!</h2>
+  <a href="plan-trip.html" class="btn btn-brand pulse-btn">Start Planning</a>
+</section>
+
+
+<footer class="pt-5 pb-4" style="background: #1c1f30; color: #fff;">
+  <div class="container">
+    <div class="row g-4">
+      <!-- Brand Column -->
+      <div class="col-lg-4 col-md-6 order-1 mb-4 mb-md-0">
+        <div class="d-flex align-items-center mb-3">
+          <i class="bi bi-compass fs-3 me-3" style="color: #ff5e57;"></i>
+          <h4 class="m-0">SmartTravel</h4>
+        </div>
+        <p class="mb-4" style="opacity: 0.8; line-height: 1.6;">Your AI-powered travel companion for seamless journeys across Tamil Nadu.</p>
+        
+        <!-- Social Icons with WhatsApp -->
+        <div class="social-icons-container">
+          <h6 class="mb-3" style="font-weight: 500;">Connect With Us</h6>
+          <div class="d-flex">
+            <a href="https://facebook.com" target="_blank" class="social-btn me-3">
+              <i class="bi bi-facebook"></i>
+            </a>
+            <a href="https://instagram.com" target="_blank" class="social-btn me-3">
+              <i class="bi bi-instagram"></i>
+            </a>
+            <a href="https://wa.me/919876543210" target="_blank" class="social-btn me-3">
+              <i class="bi bi-whatsapp"></i>
+            </a>
+        
+          </div>
+        </div>
+      </div>
+
+      <!-- Centered Travel Updates Column -->
+      <div class="col-lg-4 col-md-12 order-3 order-lg-2 mb-4 mb-md-0">
+        <div class="newsletter text-center px-3">
+          <h6 class="footer-title mb-4">Travel Updates</h6>
+          <div class="d-flex justify-content-center">
+            <div style="max-width: 400px; width: 100%;">
+              <div class="input-group mb-3">
+                <input type="email" class="form-control py-2 px-3" placeholder="Enter your email" style="background: #2a2e42; border: 1px solid #3a3f58; color: #fff; border-radius: 8px 0 0 8px;">
+                <button class="btn px-4" type="button" style="background: #ff5e57; color: white; border-radius: 0 8px 8px 0;">
+                  <i class="bi bi-send-fill"></i>
+                </button>
+              </div>
+              <small class="d-block" style="opacity: 0.6; font-size: 0.85rem;">Get exclusive travel deals and updates</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Column -->
+      <div class="col-lg-4 col-md-6 order-2 order-lg-3 mb-4 mb-md-0">
+        <h6 class="footer-title mb-4">Contact Us</h6>
+        <ul class="list-unstyled contact-list">
+          <li class="mb-3 d-flex align-items-start">
+            <i class="bi bi-geo-alt-fill me-3 mt-1" style="color: #ff5e57; font-size: 1.1rem;"></i>
+            <span style="line-height: 1.5;">123 Travel Street, Coimbatore, Tamil Nadu</span>
+          </li>
+          <li class="mb-3 d-flex align-items-center">
+            <i class="bi bi-envelope-fill me-3" style="color: #ff5e57; font-size: 1.1rem;"></i>
+            <span>contact@smarttravel.com</span>
+          </li>
+          <li class="d-flex align-items-center">
+            <i class="bi bi-telephone-fill me-3" style="color: #ff5e57; font-size: 1.1rem;"></i>
+            <span>+91 98765 43210</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <hr style="border-color: rgba(255,255,255,0.1); margin: 2.5rem 0 1.5rem;">
+    <!-- Centered Copyright -->
+    <div class="row">
+      <div class="col-12 text-center">
+        <p style="opacity: 0.7; margin: 0;">© 2025 SmartTravel. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Navbar scroll effect
+  window.addEventListener("scroll", () => {
+    document.querySelector(".navbar").classList.toggle("scrolled", window.scrollY > 40);
+  });
+
+  // Dynamic user name in hero section
+  const username = localStorage.getItem('username') || 'Traveler';
+  document.getElementById('username').textContent = username;
+  // Google Translate init
+  window.googleTranslateElementInit = function() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'en',
+      includedLanguages: 'en,ta,hi,ml,te,kn,mr,bn,gu,pa,ur,fr,de,es,zh-CN',
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    }, 'google_translate_element');
+  };
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

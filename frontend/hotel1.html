@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Elegant Hotel Page - SmartTravel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+  <style>
+    :root {
+      --brand: #ff5e57;
+      --brand-dark: #e74c3c;
+      --text-dark: #333333;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      color: var(--text-dark);
+    }
+
+    .back-btn {
+      margin: 20px;
+    }
+
+    .hotel-img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .room-card {
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .room-card:hover {
+      transform: scale(1.02);
+    }
+
+    .footer {
+      background-color: #1c1f30;
+    }
+
+    .star-rating i {
+      color: gold;
+    }
+
+    .map-container iframe {
+      width: 100%;
+      height: 250px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+
+    .book-now-btn {
+      background-color: var(--brand);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      border: none;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    .book-now-btn:hover {
+      background-color: var(--brand-dark);
+    }
+     .btn-brand {
+      background-color: var(--brand);
+      color: white;
+      border-radius: 8px;
+      padding: 10px 20px;
+      transition: 0.3s;
+    }
+
+    .btn-brand:hover {
+      background-color: var(--brand-dark);
+    }
+
+    .hotel-img {
+      max-width: 100%;
+      border-radius: 10px;
+    }
+
+    .room-card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s;
+    }
+
+    .room-card:hover {
+      transform: scale(1.02);
+    }
+
+    .section-title {
+      font-weight: bold;
+      font-size: 1.5rem;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      color: var(--brand-dark);
+    }
+
+    .map-preview {
+      width: 100%;
+      border-radius: 10px;
+      height: 250px;
+      background: url('https://via.placeholder.com/600x250?text=Map+Location') center/cover no-repeat;
+    }
+
+    .policy-list li {
+      margin-bottom: 8px;
+    }
+
+    .review-box {
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin-bottom: 10px;
+    }
+
+    footer {
+      background-color: var(--footer-navy);
+    }
+
+    .footer-link {
+      color: #ccc;
+      text-decoration: none;
+    }
+
+    .footer-link:hover {
+      color: white;
+    }
+      .room-card {
+      border: none;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .room-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .footer {
+      background-color: #1c1f30;
+      color: #fff;
+    }
+
+    .footer a {
+      color: #ccc;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    .book-btn {
+      background-color: #1c1f30;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      color: white;
+      font-weight: 500;
+    }
+
+    .book-btn:hover {
+      background-color: #2d3251;
+    }
+  </style>
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg fixed-top shadow-sm" style="background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); z-index: 999;">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand fw-semibold" href="index.html">SmartTravel</a>
+      <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav me-2">
+          <li class="nav-item"><a class="nav-link" href="index.html"><i class="bi bi-house-door"></i> Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="plan-trip.html"><i class="bi bi-map-fill"></i> Plan Trip</a></li>
+          <li class="nav-item"><a class="nav-link" href="hotel.html"><i class="bi bi-building"></i> Hotels</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="transportDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-bus-front"></i> Transport
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="transportDropdown">
+              <li><a class="dropdown-item" href="bus.html">Bus</a></li>
+              <li><a class="dropdown-item" href="train.html">Train</a></li>
+              <li><a class="dropdown-item" href="transport.html">All Transport</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="map.html"><i class="bi bi-map"></i> Map</a></li>
+          <li class="nav-item"><a class="nav-link" href="login.html"><i class="bi bi-person-circle"></i> Login</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Back to Home -->
+  <div class="text-start back-btn" style="margin-top: 80px;">
+    <a href="hotel.html" class="btn btn-outline-secondary">&larr; Back to Home</a>
+  </div>
+
+  <!-- Hotel Image -->
+  <div class="container text-center">
+    <img src="images/h1.jpg" class="hotel-img" alt="Hotel Image">
+    <h2 class="mt-3">Royal Paradise Hotel</h2>
+    <p class="fs-5">Starting from ₹3,500/night</p>
+    
+    <!-- Booking Options -->
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <form class="border rounded p-4 shadow-sm bg-light">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="checkin" class="form-label">Check-In</label>
+              <input type="date" class="form-control" id="checkin">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="checkout" class="form-label">Check-Out</label>
+              <input type="date" class="form-control" id="checkout">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="guests" class="form-label">Guests</label>
+            <input type="number" class="form-control" id="guests" placeholder="Number of guests">
+          </div>
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="includeMeals">
+            <label class="form-check-label" for="includeMeals">Include Meals (₹500 extra)</label>
+          </div>
+<a href="book.html">
+  <button type="button" class="book-now-btn">Book Now</button>
+</a>        </form>
+      </div>
+    </div>
+  </div>
+<div class="container py-5">
+    <h2 class="text-center mb-5 fw-bold">Book Your Stay at Crystal Palace Hotel</h2>
+    <div class="row g-4">
+
+      <!-- Room 1 -->
+      <div class="col-md-4">
+        <div class="card room-card p-3">
+          <div class="card-body">
+            <h4 class="card-title fw-bold">Standard Room</h4>
+            <p class="card-text">A cozy room with all essentials for a comfortable stay.</p>
+            <ul>
+              <li>Free WiFi</li>
+              <li>Queen Bed</li>
+              <li>Attached Bathroom</li>
+            </ul>
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input meal-toggle" type="checkbox" data-base="1200" data-extra="400">
+              <label class="form-check-label">Include Meals (+₹400)</label>
+            </div>
+            <h5>Total: ₹<span class="price">1200</span></h5>
+  <button class="book-btn mt-3 w-100">Book Now</button>       </div>
+        </div>
+      </div>
+
+      <!-- Room 2 -->
+      <div class="col-md-4">
+        <div class="card room-card p-3">
+          <div class="card-body">
+            <h4 class="card-title fw-bold">Deluxe Room</h4>
+            <p class="card-text">A spacious room with premium amenities for added comfort.</p>
+            <ul>
+              <li>King Bed</li>
+              <li>Mini Fridge</li>
+              <li>Balcony View</li>
+            </ul>
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input meal-toggle" type="checkbox" data-base="1800" data-extra="600">
+              <label class="form-check-label">Include Meals (+₹600)</label>
+            </div>
+            <h5>Total: ₹<span class="price">1800</span></h5>
+            <button class="book-btn mt-3 w-100">Book Now</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Room 3 -->
+      <div class="col-md-4">
+        <div class="card room-card p-3">
+          <div class="card-body">
+            <h4 class="card-title fw-bold">Suite</h4>
+            <p class="card-text">An elegant suite with luxury interiors and full facilities.</p>
+            <ul>
+              <li>Super King Bed</li>
+              <li>Jacuzzi</li>
+              <li>Living Area</li>
+            </ul>
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input meal-toggle" type="checkbox" data-base="2500" data-extra="800">
+              <label class="form-check-label">Include Meals (+₹800)</label>
+            </div>
+            <h5>Total: ₹<span class="price">2500</span></h5>
+            <button class="book-btn mt-3 w-100">Book Now</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Map -->
+    <div class="mt-5">
+      <h4 class="fw-bold">Hotel Location</h4>
+      <div style="width: 100%; height: 300px; border-radius: 15px; overflow: hidden;">
+        <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+          src="https://www.openstreetmap.org/export/embed.html?bbox=76.955%2C11.001%2C77.055%2C11.101&layer=mapnik&marker=11.051%2C77.005"
+          style="border:1px solid #ccc;">
+        </iframe>
+      </div>
+    </div>
+  </div>
+
+   
+
+  <!-- Reviews -->
+  <div class="container mb-5">
+    <h4 class="mb-3">Guest Reviews</h4>
+    <div class="mb-3">
+      <p><strong>Ananya S:</strong> “Lovely stay, great service!”</p>
+      <div class="star-rating">
+        ★★★★☆
+      </div>
+    </div>
+    <div class="mb-3">
+      <p><strong>Karthik R:</strong> “Rooms were clean and spacious.”</p>
+      <div class="star-rating">
+        ★★★★★
+      </div>
+    </div>
+    <div class="mb-3">
+      <p><strong>Priya M:</strong> “Food was okay, but overall nice experience.”</p>
+      <div class="star-rating">
+        ★★★☆☆
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= Enhanced Elegant Footer ======= -->
+<footer class="pt-5 pb-4" style="background: #1c1f30; color: #fff;">
+  <div class="container">
+    <div class="row g-4">
+      <!-- Brand Column -->
+      <div class="col-lg-4 col-md-6 order-1 mb-4 mb-md-0">
+        <div class="d-flex align-items-center mb-3">
+          <i class="bi bi-compass fs-3 me-3" style="color: #ff5e57;"></i>
+          <h4 class="m-0">SmartTravel</h4>
+        </div>
+        <p class="mb-4" style="opacity: 0.8; line-height: 1.6;">Your AI-powered travel companion for seamless journeys across Tamil Nadu.</p>
+        
+        <!-- Social Icons with WhatsApp -->
+        <div class="social-icons-container">
+          <h6 class="mb-3" style="font-weight: 500;">Connect With Us</h6>
+          <div class="d-flex">
+            <a href="https://facebook.com" target="_blank" class="social-btn me-3">
+              <i class="bi bi-facebook"></i>
+            </a>
+            <a href="https://instagram.com" target="_blank" class="social-btn me-3">
+              <i class="bi bi-instagram"></i>
+            </a>
+            <a href="https://wa.me/919876543210" target="_blank" class="social-btn me-3">
+              <i class="bi bi-whatsapp"></i>
+            </a>
+        
+          </div>
+        </div>
+      </div>
+
+      <!-- Centered Travel Updates Column -->
+      <div class="col-lg-4 col-md-12 order-3 order-lg-2 mb-4 mb-md-0">
+        <div class="newsletter text-center px-3">
+          <h6 class="footer-title mb-4">Travel Updates</h6>
+          <div class="d-flex justify-content-center">
+            <div style="max-width: 400px; width: 100%;">
+              <div class="input-group mb-3">
+                <input type="email" class="form-control py-2 px-3" placeholder="Enter your email" style="background: #2a2e42; border: 1px solid #3a3f58; color: #fff; border-radius: 8px 0 0 8px;">
+                <button class="btn px-4" type="button" style="background: #ff5e57; color: white; border-radius: 0 8px 8px 0;">
+                  <i class="bi bi-send-fill"></i>
+                </button>
+              </div>
+              <small class="d-block" style="opacity: 0.6; font-size: 0.85rem;">Get exclusive travel deals and updates</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Column -->
+      <div class="col-lg-4 col-md-6 order-2 order-lg-3 mb-4 mb-md-0">
+        <h6 class="footer-title mb-4">Contact Us</h6>
+        <ul class="list-unstyled contact-list">
+          <li class="mb-3 d-flex align-items-start">
+            <i class="bi bi-geo-alt-fill me-3 mt-1" style="color: #ff5e57; font-size: 1.1rem;"></i>
+            <span style="line-height: 1.5;">123 Travel Street, Coimbatore, Tamil Nadu</span>
+          </li>
+          <li class="mb-3 d-flex align-items-center">
+            <i class="bi bi-envelope-fill me-3" style="color: #ff5e57; font-size: 1.1rem;"></i>
+            <span>contact@smarttravel.com</span>
+          </li>
+          <li class="d-flex align-items-center">
+            <i class="bi bi-telephone-fill me-3" style="color: #ff5e57; font-size: 1.1rem;"></i>
+            <span>+91 98765 43210</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <hr style="border-color: rgba(255,255,255,0.1); margin: 2.5rem 0 1.5rem;">
+    <!-- Centered Copyright -->
+    <div class="row">
+      <div class="col-12 text-center">
+        <p style="opacity: 0.7; margin: 0;">© 2025 SmartTravel. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  /* Footer Specific Styles */
+  .footer-title {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    position: relative;
+    padding-bottom: 10px;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+  }
+  
+  .footer-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 50px;
+    height: 2px;
+    background: #ff5e57;
+  }
+  
+  .social-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    color: white;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+  }
+  
+  .social-btn:hover {
+    background: #ff5e57;
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 4px 8px rgba(255, 94, 87, 0.3);
+  }
+  
+  .newsletter .form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 94, 87, 0.25);
+    border-color: #ff5e57;
+    background: #2a2e42;
+    color: white;
+  }
+  
+  .newsletter .btn {
+    transition: all 0.3s ease;
+  }
+  
+  .newsletter .btn:hover {
+    background: #e74c3c !important;
+    transform: scale(1.05);
+  }
+  
+  .contact-list li {
+    margin-bottom: 1.2rem;
+    transition: all 0.3s ease;
+  }
+  
+  .contact-list li:hover {
+    transform: translateX(5px);
+  }
+  
+  .contact-list li:hover i {
+    transform: scale(1.1);
+  }
+  
+  @media (max-width: 992px) {
+    .newsletter {
+      margin: 2rem 0;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .social-icons-container {
+      margin-top: 1.5rem;
+    }
+  }
+</style>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Itinerary | SmartTravel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    :root { --brand: #ff5e57; --brand-dark: #e74c3c; --text-dark: #333333; }
+    body { background: #f7f8fb; }
+    .navbar { background-color: rgba(255,255,255,0.3); backdrop-filter: blur(8px); }
+    .navbar.scrolled { background-color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    .nav-link, .navbar-brand { color: #000 !important; font-weight: 500; }
+    .page-header { padding: 90px 0 24px; text-align: center; }
+    .btn-brand { background-color: var(--brand); color: #fff; }
+    .btn-brand:hover { background-color: var(--brand-dark); color: #fff; }
+    .day-card { border: none; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+    .card-ticket { border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg fixed-top shadow-sm">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand fw-semibold" href="#">SmartTravel</a>
+      <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav me-2">
+          <li class="nav-item"><a class="nav-link" href="index.html"><i class="bi bi-house-door"></i> Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="hotel.html"><i class="bi bi-building"></i> Hotels</a></li>
+          <li class="nav-item"><a class="nav-link" href="bus.html"><i class="bi bi-bus-front"></i> Transport</a></li>
+          <li class="nav-item"><a class="nav-link" href="map.html"><i class="bi bi-map"></i> Map</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="page-header container">
+    <h2 class="fw-bold">Generate Your Trip Plan</h2>
+    <p class="text-muted">We will split your selected places across the number of days you choose.</p>
+  </header>
+
+  <main class="container pb-5">
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-4">
+            <label class="form-label">Destination</label>
+            <input id="destination" class="form-control" disabled>
+          </div>
+          <div class="col-md-4">
+            <label for="numDays" class="form-label">Number of Days</label>
+            <input id="numDays" type="number" min="1" max="30" class="form-control" placeholder="e.g., 3">
+          </div>
+          <div class="col-md-4">
+            <button id="generateBtn" class="btn btn-brand w-100">Generate Plan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="feasibilityAlert" class="alert alert-warning d-none" role="alert"></div>
+
+    <div id="emptyState" class="alert alert-warning">No places in your plan yet. Go back and add some attractions first.</div>
+    <div id="itineraryContainer" class="d-none"></div>
+
+    <div id="unscheduledContainer" class="d-none mt-3">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Not scheduled</h5>
+          <p class="text-muted mb-2">These places could not be fit into the current number of days.</p>
+          <ul id="unscheduledList" class="list-unstyled mb-0"></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mt-4">
+      <a href="hotel.html" class="btn btn-outline-secondary">Choose Hotels</a>
+      <a href="transport.html" class="btn btn-outline-secondary">Check Transport Availability</a>
+    </div>
+
+    <!-- Hotels UI (inserted below itinerary) -->
+    <div id="hotelSection" class="d-none mt-4">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title mb-2">Find Nearby Hotels</h5>
+          <p class="text-muted mb-3">Search hotels near your trip places or destination.</p>
+          <div class="row g-2 align-items-center">
+            <div class="col-md-8">
+              <input id="hotelQueryInput" class="form-control" placeholder="Optional: refine (e.g., 'near Marina Bay')">
+            </div>
+            <div class="col-md-4 d-flex gap-2">
+              <button id="findHotelsBtn" class="btn btn-outline-primary w-100">Find Hotels</button>
+              <button id="openHotelsPageBtn" class="btn btn-brand w-100">Open Hotels Page</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="hotelsContainer" class="mt-3 row g-3"></div>
+    </div>
+
+  </main>
+
+  <!-- Proceed Modal -->
+  <div class="modal fade" id="planModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Proceed to Transport</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="planModalBody">
+          Your itinerary has been generated. Do you want to check real-time transport availability next?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Adjust Plan</button>
+          <a href="transport.html" id="proceedTransportBtn" class="btn btn-brand">Proceed to Transport</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    window.addEventListener('scroll', () => { document.querySelector('.navbar').classList.toggle('scrolled', window.scrollY > 40); });
+
+    const PLAN_KEY = 'tripPlan';
+    const API_BASE = '/api'; // backend prefix; adjust if needed (e.g., http://localhost:5000/api)
+    const HOTEL_API = `${API_BASE}/hotels`;
+
+    function loadPlan() { try { return JSON.parse(localStorage.getItem(PLAN_KEY)) || null; } catch { return null; } }
+
+    function distributePlaces(places, numDays, maxPerDay) {
+      const days = Array.from({ length: numDays }, () => []);
+      let dayIndex = 0;
+      places.forEach(place => {
+        days[dayIndex].push(place);
+        if (days[dayIndex].length >= maxPerDay) dayIndex = (dayIndex + 1) % numDays;
+      });
+      return days;
+    }
+
+    function renderItinerary(plan, numDays) {
+      const container = document.getElementById('itineraryContainer');
+      const unscheduledWrap = document.getElementById('unscheduledContainer');
+      const unscheduledList = document.getElementById('unscheduledList');
+      const feasibility = document.getElementById('feasibilityAlert');
+      container.innerHTML = '';
+      unscheduledList.innerHTML = '';
+
+      const MAX_PLACES_PER_DAY = 3;
+      const capacity = numDays * MAX_PLACES_PER_DAY;
+      const total = (plan.places || []).length;
+      let scheduled = plan.places || [];
+      let unscheduled = [];
+
+      if (total > capacity) {
+        scheduled = plan.places.slice(0, capacity);
+        unscheduled = plan.places.slice(capacity);
+        feasibility.classList.remove('d-none');
+        feasibility.textContent = `It may not be possible to visit all ${total} places in ${numDays} day(s). We scheduled ${capacity} and left ${unscheduled.length} as extras. Consider increasing days or removing places.`;
+      } else {
+        feasibility.classList.add('d-none');
+      }
+
+      const buckets = distributePlaces(scheduled, numDays, MAX_PLACES_PER_DAY);
+      buckets.forEach((dayPlaces, i) => {
+        const card = document.createElement('div');
+        card.className = 'card day-card mb-3';
+        const dayNum = i + 1;
+        card.innerHTML = `
+          <div class="card-body">
+            <h5 class="card-title mb-3">Day ${dayNum}</h5>
+            ${dayPlaces.length ? '' : '<p class="text-muted mb-0">Free day</p>'}
+            ${dayPlaces.map(p => `
+              <div class="d-flex align-items-center mb-2">
+                ${p.image ? `<img src="${p.image}" alt="${p.title}" style="width:54px;height:40px;object-fit:cover;border-radius:6px;" class="me-2" referrerpolicy="no-referrer">` : ''}
+                <a class="text-decoration-none" target="_blank" rel="noopener" href="${p.url || '#'}">${p.title}</a>
+              </div>
+            `).join('')}
+          </div>`;
+        container.appendChild(card);
+      });
+
+      container.classList.remove('d-none');
+
+      if (unscheduled.length) {
+        unscheduled.forEach(p => {
+          const li = document.createElement('li');
+          li.innerHTML = `${p.image ? `<img src="${p.image}" alt="${p.title}" style="width:42px;height:32px;object-fit:cover;border-radius:6px;" class="me-2" referrerpolicy="no-referrer">` : ''}<a class="text-decoration-none" target="_blank" rel="noopener" href="${p.url}">${p.title}</a>`;
+          li.className = 'd-flex align-items-center mb-2';
+          unscheduledList.appendChild(li);
+        });
+        unscheduledWrap.classList.remove('d-none');
+      } else {
+        unscheduledWrap.classList.add('d-none');
+      }
+
+      // show hotels section once itinerary is rendered
+      document.getElementById('hotelSection').classList.remove('d-none');
+      return unscheduled.length > 0;
+    }
+
+    /* ===== Hotels: frontend integration ===== */
+    async function findNearbyHotels({ lat, lng, query }) {
+      try {
+        let url = HOTEL_API;
+        if (lat && lng) url += `?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(lng)}`;
+        else if (query) url += `?query=${encodeURIComponent(query)}`;
+        else throw new Error('Provide lat/lng or query');
+        const res = await fetch(url);
+        if (!res.ok) {
+          const t = await res.text().catch(() => res.statusText);
+          throw new Error(`Hotel API failed: ${res.status} ${t}`);
+        }
+        return await res.json();
+      } catch (err) {
+        console.error(err);
+        alert('Unable to fetch hotels. See console for details.');
+        return [];
+      }
+    }
+
+    function renderHotels(hotels = []) {
+      const container = document.getElementById('hotelsContainer');
+      container.innerHTML = '';
+      if (!hotels.length) {
+        container.innerHTML = `<div class="alert alert-info w-100">No hotels found for your query.</div>`;
+        return;
+      }
+      hotels.forEach(h => {
+        const col = document.createElement('div');
+        col.className = 'col-md-4';
+        col.innerHTML = `
+          <div class="card p-3 card-ticket">
+            <div class="d-flex justify-content-between mb-2">
+              <div>
+                <strong>${h.name}</strong><br/>
+                <small class="text-muted">${h.vicinity || h.address || ''}</small>
+              </div>
+              <div class="text-end">
+                <div class="text-success">${h.rating ? '★' + h.rating : ''}</div>
+                <small class="text-muted">${h.distance ? h.distance + ' m' : ''}</small>
+              </div>
+            </div>
+            <p class="mb-1"><strong>Price (est):</strong> ${h.price_level ? '$'.repeat(h.price_level) : '—'}</p>
+            <div class="d-flex gap-2 mt-2">
+              <a class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener" href="${h.url || '#'}">View</a>
+              <button class="btn btn-sm btn-brand" onclick="bookHotel('${encodeURIComponent(JSON.stringify(h))}')">Select</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(col);
+      });
+    }
+
+    window.bookHotel = function(hJson) {
+      try {
+        const hotel = JSON.parse(decodeURIComponent(hJson));
+        localStorage.setItem('selectedHotel', JSON.stringify(hotel));
+        window.location.href = `hotel.html?selected=${encodeURIComponent(hotel.name)}`;
+      } catch (e) {
+        console.error(e);
+        alert('Could not save hotel selection.');
+      }
+    };
+
+    /* ===== Init & wiring ===== */
+    function init() {
+      const plan = loadPlan();
+      const destInput = document.getElementById('destination');
+      const empty = document.getElementById('emptyState');
+
+      if (!plan || !Array.isArray(plan.places) || plan.places.length === 0) {
+        destInput.value = plan?.destination || '';
+        empty.classList.remove('d-none');
+        return;
+      }
+
+      destInput.value = plan.destination || '';
+      empty.classList.add('d-none');
+
+      document.getElementById('generateBtn').addEventListener('click', async () => {
+        const num = Math.max(1, Math.min(30, Number(document.getElementById('numDays').value || 0)));
+        if (!num) { alert('Please enter a valid number of days.'); return; }
+        try { localStorage.setItem('lastGeneratedNumDays', String(num)); } catch {}
+        const hadUnscheduled = renderItinerary(plan, num);
+        const body = document.getElementById('planModalBody');
+        body.textContent = hadUnscheduled
+          ? 'Some places could not be scheduled within the selected days. Continue to transport or adjust your plan?'
+          : 'Your itinerary looks good. Continue to transport to check real-time availability?';
+        const modal = new bootstrap.Modal(document.getElementById('planModal'));
+        modal.show();
+      });
+
+      // hotels wiring
+      const firstPlace = plan.places?.[0] || null;
+      let defaultLatLng = null;
+      if (firstPlace && firstPlace.location && firstPlace.location.lat && firstPlace.location.lng) {
+        defaultLatLng = { lat: firstPlace.location.lat, lng: firstPlace.location.lng };
+      }
+
+      document.getElementById('findHotelsBtn').addEventListener('click', async () => {
+        const manualQuery = (document.getElementById('hotelQueryInput').value || '').trim();
+        let hotels = [];
+        if (manualQuery) hotels = await findNearbyHotels({ query: manualQuery });
+        else if (defaultLatLng) hotels = await findNearbyHotels(defaultLatLng);
+        else hotels = await findNearbyHotels({ query: plan.destination });
+        renderHotels(hotels);
+        document.getElementById('hotelsContainer').scrollIntoView({ behavior: 'smooth' });
+      });
+
+      document.getElementById('openHotelsPageBtn').addEventListener('click', () => {
+        const manualQuery = (document.getElementById('hotelQueryInput').value || '').trim();
+        const q = manualQuery || plan.destination || (defaultLatLng ? `${defaultLatLng.lat},${defaultLatLng.lng}` : '');
+        window.location.href = `hotel.html?query=${encodeURIComponent(q)}`;
+      });
+
+      // auto-restore previous numDays and render
+      const lastNum = Number(localStorage.getItem('lastGeneratedNumDays') || 0);
+      if (lastNum) {
+        document.getElementById('numDays').value = lastNum;
+        renderItinerary(plan, lastNum);
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotels | SmartTravel</title>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    :root {
+      --brand: #ff5e57;
+      --brand-dark: #e74c3c;
+      --text-dark: #333333;
+    }
+   .navbar {
+      background-color: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(8px);
+    }
+    .navbar.scrolled {
+      background-color: #adadad;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .nav-link, .navbar-brand {
+      color: #000000 !important;
+      font-weight: 500;
+    }
+    .hotel-img {
+      height: 200px;
+      object-fit: cover;
+    }
+    .price-tag {
+      font-weight: bold;
+      color: #ef5844;
+    }
+    .hotel-card {
+      height: 100%;
+    }
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .filter-row > div {
+      flex: 1;
+    }
+     .card:hover {
+  transform: scale(1.03);
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+   .card:hover {
+  transform: scale(1.03);
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 0 15px rgba(0, 128, 128, 0.4); /* minty glow */
+}
+    .hotel-card-wrapper {
+      margin-bottom: 20px;
+    }
+    .filter-controls {
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .form-check {
+      margin-top: 10px;
+    }
+   .card .btn {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* =======  Footer  ======= */
+    footer {
+      background-color: #101820;
+      color: #ffffff;
+      padding: 3rem 0 1.5rem;
+    }
+    .social-icon {
+      font-size: 1.4rem;
+      margin: 0 0.6rem;
+      color: #ffffff;
+      transition: opacity 0.3s;
+    }
+    .social-icon:hover {
+      opacity: 0.75;
+    }
+    .dropdown-menu {
+  background-color: rgba(255, 255, 255, 0.05); /* nearly transparent */
+  backdrop-filter: blur(6px); /* optional: glassy blur */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Dropdown items styling */
+.dropdown-item {
+  color: rgb(33, 33, 33);
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: rgba(255, 255, 255, 0.15); /* subtle highlight */
+  color: rgb(248, 0, 0);
+}
+    .btn-brand {
+      background-color: var(--brand);
+      color: #000000;
+      padding: 0.75rem 2rem;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+ 
+      transition: all 0.3s ease;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 94, 87, 0.7); }
+      70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 94, 87, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 94, 87, 0); }
+    }
+
+    .btn-brand:hover {
+      background-color: var(--brand-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(255, 94, 87, 0.4);
+    }
+
+  </style>
+</head>
+<body>
+  <!-- =======  Navbar  ======= -->
+<!-- =======  Navbar  ======= -->
+<nav class="navbar navbar-expand-lg fixed-top shadow-sm">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand fw-semibold" href="#">SmartTravel</a>
+    <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav me-2">
+        <li class="nav-item">
+          <a class="nav-link" href="index.html"><i class="bi bi-house-door"></i> Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="hotel.html"><i class="bi bi-building"></i> Hotels</a>
+        </li>
+        <li class="nav-item dropdown" style="color:black;">
+          <a class="nav-link dropdown-toggle" href="#" id="transportDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-bus-front"></i> Transport
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="transportDropdown" style="color:black;">
+            <li><a class="dropdown-item" href="bus.html">Bus</a></li>
+            <li><a class="dropdown-item" href="train.html">Train</a></li>
+            <li><a class="dropdown-item" href="#cab">Cab</a></li>
+            <li><a class="dropdown-item" href="#flight">Flight</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="map.html"><i class="bi bi-map"></i> Map</a></li>
+        <li class="nav-item"><a class="nav-link" href="#language"><i class="bi bi-translate"></i> Language</a></li>
+        <li class="nav-item"><a class="nav-link" href="login.html"><i class="bi bi-person-circle"></i> Login</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<br>
+<br>
+<div class="container mt-4">
+  <h2 class="mb-4 text-center">Popular Hotels</h2>
+  <div class="row filter-row">
+    <div><input type="text" id="filterName" class="form-control" placeholder="Search by name"></div>
+    <div><select id="filterType" class="form-select"><option value="">All Types</option><option value="Hotel">Hotel</option><option value="Resort">Resort</option></select></div>
+    <div><select id="filterLocation" class="form-select"><option value="">All Locations</option><option value="Kodaikanal">Kodaikanal</option><option value="Ooty">Ooty</option></select></div>
+    <div><select id="filterPrice" class="form-select"><option value="">All Prices</option><option value="3000">Under ₹3000</option><option value="4000">Under ₹4000</option><option value="5000">Under ₹5000</option></select></div>
+    <div><select id="sortBy" class="form-select"><option value="">Sort By</option><option value="priceLow">Price: Low to High</option><option value="priceHigh">Price: High to Low</option><option value="rating">Rating</option></select></div>
+  </div>
+<br>
+  <div class="row" id="hotelList">
+    <!-- Hotel Card Template -->
+    <!-- You can duplicate this card and change content accordingly -->
+    <div class="col-md-4 mb-4 hotel-card-wrapper" data-name="Hilltop Haven" data-type="Hotel" data-location="Kodaikanal" data-price="4500">
+      <div class="card hotel-card">
+        <img src="images/h1.jpg" class="hotel-img card-img-top" alt="Hilltop Haven">
+        <div class="card-body">
+          <h5 class="card-title">Hilltop Haven</h5>
+          <p class="card-text">⭐ 5 Star Hotel, Kodaikanal</p>
+          <p class="price-tag">₹4,500 / night</p>
+          <div class="form-check mb-2">
+            <input class="form-check-input meal-checkbox" type="checkbox" id="meal1">
+            <label class="form-check-label" for="meal1">Include Meals</label>
+          </div>
+     <div class="d-flex justify-content-between gap-2 mt-2">
+  <!-- Book Now -->
+  <div class="flex-fill">
+    <a href="hotel1.html?hotel=Hilltop%20Haven" class="btn btn-outline-success btn-sm w-100 book-btn">Book Now</a>
+    
+    <a href="hotel1.html?hotel=Hilltop%20Haven&meals=true" class="btn btn-outline-success btn-sm w-100 book-meal-btn" style="display: none;">Book Now with Meals</a>
+  </div>
+
+  <!-- Nearby Restaurants -->
+  <div class="flex-fill">
+    <a href="restaurant1.html" class="btn btn-outline-primary btn-sm w-100 nearby-btn">Nearby Restaurants</a>
+  </div>
+</div>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4 hotel-card-wrapper" data-name="Rose Villat" data-type="Resort" data-location="Ooty" data-price="3800">
+      <div class="card hotel-card">
+        <img src="images/h2.jpg" class="hotel-img card-img-top" alt="Forest Retreat">
+        <div class="card-body">
+          <h5 class="card-title">Rose Villa</h5>
+          <p class="card-text">⭐ 4, Ooty</p>
+          <p class="price-tag">₹3,500/ night</p>
+          <div class="form-check mb-2">
+            <input class="form-check-input meal-checkbox" type="checkbox" id="meal2">
+            <label class="form-check-label" for="meal2">Include Meals</label>
+          </div>
+          <div class="d-flex justify-content-between">
+      <a href="hotel1.html?hotel=Rose%20Villa" class="btn btn-outline-success btn-sm book-btn flex-fill me-1">Book Now</a>
+       <a href="hotel1.html?hotel=Rose%20Villa&meals=true" class="btn btn-outline-success btn-sm book-meal-btn flex-fill me-1" style="display: none;">Book Now with Meals</a>
+  <a href="restaurant1.html" class="btn btn-outline-primary btn-sm nearby-btn flex-fill ms-1">Nearby Restaurants</a>
+</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4 hotel-card-wrapper" data-name="Luxury star" data-type="Resort" data-location="Ooty" data-price="3800">
+      <div class="card hotel-card">
+        <img src="images/h3.jpg" class="hotel-img card-img-top" alt="Forest Retreat">
+        <div class="card-body">
+          <h5 class="card-title">Luxury star</h5>
+          <p class="card-text">⭐ 5, Ooty</p>
+          <p class="price-tag">₹3,500/ night</p>
+          <div class="form-check mb-2">
+            <input class="form-check-input meal-checkbox" type="checkbox" id="meal2">
+            <label class="form-check-label" for="meal2">Include Meals</label>
+          </div>
+         <div class="d-flex justify-content-between">
+      <a href="hotel1.html?hotel=Luxury%20star" class="btn btn-outline-success btn-sm book-btn flex-fill me-1">Book Now</a>
+       <a href="hotel1.html?hotel=Luxury%20star&meals=true" class="btn btn-outline-success btn-sm book-meal-btn flex-fill me-1" style="display: none;">Book Now with Meals</a>
+  <a href="restaurant1.html" class="btn btn-outline-primary btn-sm nearby-btn flex-fill ms-1">Nearby Restaurants</a>
+</div>
+        </div>
+      </div>
+    </div><div class="col-md-4 mb-4 hotel-card-wrapper" data-name="Forest Retreat" data-type="Resort" data-location="Ooty" data-price="3800">
+      <div class="card hotel-card">
+        <img src="images/h4.jpg" class="hotel-img card-img-top" alt="Forest Retreat">
+        <div class="card-body">
+          <h5 class="card-title">Hilltop Restaurant</h5>
+          <p class="card-text">⭐ 5, Kodaikanal</p>
+          <p class="price-tag">₹3,500/ night</p>
+          <div class="form-check mb-2">
+            <input class="form-check-input meal-checkbox" type="checkbox" id="meal2">
+            <label class="form-check-label" for="meal2">Include Meals</label>
+          </div>
+        <div class="d-flex justify-content-between">
+      <a href="hotel1.html?hotel=Hilltop%20Restaurant" class="btn btn-outline-success btn-sm book-btn flex-fill me-1">Book Now</a>
+       <a href="hotel1.html?hotel=Hilltop%20Restaurant&meals=true" class="btn btn-outline-success btn-sm book-meal-btn flex-fill me-1" style="display: none;">Book Now with Meals</a>
+  <a href="restaurant1.html" class="btn btn-outline-primary btn-sm nearby-btn flex-fill ms-1">Nearby Restaurants</a>
+</div>
+        </div>
+      </div>
+    </div><div class="col-md-4 mb-4 hotel-card-wrapper" data-name="Forest Retreat" data-type="Resort" data-location="Ooty" data-price="3800">
+      <div class="card hotel-card">
+        <img src="images/h5.jpg" class="hotel-img card-img-top" alt="Forest Retreat">
+        <div class="card-body">
+          <h5 class="card-title">Cedar Cottage</h5>
+          <p class="card-text">⭐ 5, Kodaikanal</p>
+          <p class="price-tag">₹3,200/ night</p>
+          <div class="form-check mb-2">
+            <input class="form-check-input meal-checkbox" type="checkbox" id="meal2">
+            <label class="form-check-label" for="meal2">Include Meals</label>
+          </div>
+          <div class="d-flex justify-content-between">
+      <a href="hotel1.html?hotel=Cedar%20Cottage" class="btn btn-outline-success btn-sm book-btn flex-fill me-1">Book Now</a>
+       <a href="hotel1.html?hotel=Cedar%20Cottage&meals=true" class="btn btn-outline-success btn-sm book-meal-btn flex-fill me-1" style="display: none;">Book Now with Meals</a>
+  <a href="restaurant1.html" class="btn btn-outline-primary btn-sm nearby-btn flex-fill ms-1">Nearby Restaurants</a>
+</div>
+        </div>
+      </div>
+    </div><div class="col-md-4 mb-4 hotel-card-wrapper" data-name="Forest Retreat" data-type="Resort" data-location="Ooty" data-price="3800">
+      <div class="card hotel-card">
+        <img src="images/h6.jpg" class="hotel-img card-img-top" alt="Forest Retreat">
+        <div class="card-body">
+          <h5 class="card-title">Maple Holiday Home</h5>
+          <p class="card-text">⭐ 4, Ooty</p>
+          <p class="price-tag">₹2,800/ night</p>
+          <div class="form-check mb-2">
+            <input class="form-check-input meal-checkbox" type="checkbox" id="meal2">
+            <label class="form-check-label" for="meal2">Include Meals</label>
+          </div>
+      <div class="d-flex justify-content-between">
+      <a href="hotel1.html?hotel=Maple%20Holiday%20Home" class="btn btn-outline-success btn-sm book-btn flex-fill me-1">Book Now</a>
+       <a href="hotel1.html?hotel=Maple%20Holiday%20Home&meals=true" class="btn btn-outline-success btn-sm book-meal-btn flex-fill me-1" style="display: none;">Book Now with Meals</a>
+  <a href="restaurant1.html" class="btn btn-outline-primary btn-sm nearby-btn flex-fill ms-1">Nearby Restaurants</a>
+</div>
+
+        </div>
+      </div>
+    </div><div class="col-md-4 mb-4 hotel-card-wrapper" data-name="Forest Retreat" data-type="Resort" data-location="Ooty" data-price="3800">
+      <div class="card hotel-card">
+        <img src="images/h7.jpg" class="hotel-img card-img-top" alt="Forest Retreat">
+        <div class="card-body">
+          <h5 class="card-title">Budget Inn</h5>
+          <p class="card-text">⭐ 3, Ooty</p>
+          <p class="price-tag">₹2,200/ night</p>
+          <div class="form-check mb-2">
+            <input class="form-check-input meal-checkbox" type="checkbox" id="meal2">
+            <label class="form-check-label" for="meal2">Include Meals</label>
+          </div>
+        <div class="d-flex justify-content-between">
+      <a href="hotel1.html?hotel=Budget%20Inn" class="btn btn-outline-success btn-sm book-btn flex-fill me-1">Book Now</a>
+       <a href="hotel1.html?hotel=Budget%20Inn&meals=true" class="btn btn-outline-success btn-sm book-meal-btn flex-fill me-1" style="display: none;">Book Now with Meals</a>
+  <a href="restaurant1.html" class="btn btn-outline-primary btn-sm nearby-btn flex-fill ms-1">Nearby Restaurants</a>
+</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4 hotel-card-wrapper" data-name="Forest Retreat" data-type="Resort" data-location="Ooty" data-price="3800">
+      <div class="card hotel-card">
+        <img src="images/h8.jpg" class="hotel-img card-img-top" alt="Forest Retreat">
+        <div class="card-body">
+          <h5 class="card-title">Eco Nature Stay</h5>
+          <p class="card-text">⭐ 5, Ooty</p>
+          <p class="price-tag">₹3,500/ night</p>
+          <div class="form-check mb-2">
+            <input class="form-check-input meal-checkbox" type="checkbox" id="meal2">
+            <label class="form-check-label" for="meal2">Include Meals</label>
+          </div>
+          <div class="d-flex justify-content-between">
+      <a href="hotel1.html?hotel=Eco%20Nature%20Stay" class="btn btn-outline-success btn-sm book-btn flex-fill me-1">Book Now</a>
+       <a href="hotel1.html?hotel=Eco%20Nature%20Stay&meals=true" class="btn btn-outline-success btn-sm book-meal-btn flex-fill me-1" style="display: none;">Book Now with Meals</a>
+  <a href="restaurant1.html" class="btn btn-outline-primary btn-sm nearby-btn flex-fill ms-1">Nearby Restaurants</a>
+</div>
+        </div>
+      </div>
+      </div><div class="col-md-4 mb-4 hotel-card-wrapper" data-name="Forest Retreat" data-type="Resort" data-location="Ooty" data-price="3800">
+      <div class="card hotel-card">
+        <img src="images/h9.jpg" class="hotel-img card-img-top" alt="Forest Retreat">
+        <div class="card-body">
+          <h5 class="card-title">Sunrise Valley Resort</h5>
+          <p class="card-text">⭐ 5, Ooty , Resort</p>
+          <p class="price-tag">₹3,500/ night</p>
+          <div class="form-check mb-2">
+            <input class="form-check-input meal-checkbox" type="checkbox" id="meal2">
+            <label class="form-check-label" for="meal2">Include Meals</label>
+          </div>
+          <div class="d-flex justify-content-between">
+      <a href="hotel1.html?hotel=Sunrise%20Valley%20Resort" class="btn btn-outline-success btn-sm book-btn flex-fill me-1">Book Now</a>
+       <a href="hotel1.html?hotel=Sunrise%20Valley%20Resort&meals=true" class="btn btn-outline-success btn-sm book-meal-btn flex-fill me-1" style="display: none;">Book Now with Meals</a>
+  <a href="restaurant1.html" class="btn btn-outline-primary btn-sm nearby-btn flex-fill ms-1">Nearby Restaurants</a>
+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- Hotel Grid -->
+  <section class="hotels" id="hotelsGrid"></section>
+<section class="text-center py-5 bg-white animate-on-scroll">
+  <h2 class="mb-3">Skip if hotels not needed!!</h2>
+  <a href="guide.html"><button class="btn btn-brand">SKIP</button></a>
+</section>
+<!-- ======= Enhanced Elegant Footer ======= -->
+<footer class="pt-5 pb-4" style="background: #1c1f30; color: #fff;">
+  <div class="container">
+    <div class="row g-4">
+      <!-- Brand Column -->
+      <div class="col-lg-4 col-md-6 order-1 mb-4 mb-md-0">
+        <div class="d-flex align-items-center mb-3">
+          <i class="bi bi-compass fs-3 me-3" style="color: #ff5e57;"></i>
+          <h4 class="m-0">SmartTravel</h4>
+        </div>
+        <p class="mb-4" style="opacity: 0.8; line-height: 1.6;">Your AI-powered travel companion for seamless journeys across Tamil Nadu.</p>
+        
+        <!-- Social Icons with WhatsApp -->
+        <div class="social-icons-container">
+          <h6 class="mb-3" style="font-weight: 500;">Connect With Us</h6>
+          <div class="d-flex">
+            <a href="https://facebook.com" target="_blank" class="social-btn me-3">
+              <i class="bi bi-facebook"></i>
+            </a>
+            <a href="https://instagram.com" target="_blank" class="social-btn me-3">
+              <i class="bi bi-instagram"></i>
+            </a>
+            <a href="https://wa.me/919876543210" target="_blank" class="social-btn me-3">
+              <i class="bi bi-whatsapp"></i>
+            </a>
+        
+          </div>
+        </div>
+      </div>
+
+      <!-- Centered Travel Updates Column -->
+      <div class="col-lg-4 col-md-12 order-3 order-lg-2 mb-4 mb-md-0">
+        <div class="newsletter text-center px-3">
+          <h6 class="footer-title mb-4">Travel Updates</h6>
+          <div class="d-flex justify-content-center">
+            <div style="max-width: 400px; width: 100%;">
+              <div class="input-group mb-3">
+                <input type="email" class="form-control py-2 px-3" placeholder="Enter your email" style="background: #2a2e42; border: 1px solid #3a3f58; color: #fff; border-radius: 8px 0 0 8px;">
+                <button class="btn px-4" type="button" style="background: #ff5e57; color: white; border-radius: 0 8px 8px 0;">
+                  <i class="bi bi-send-fill"></i>
+                </button>
+              </div>
+              <small class="d-block" style="opacity: 0.6; font-size: 0.85rem;">Get exclusive travel deals and updates</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Column -->
+      <div class="col-lg-4 col-md-6 order-2 order-lg-3 mb-4 mb-md-0">
+        <h6 class="footer-title mb-4">Contact Us</h6>
+        <ul class="list-unstyled contact-list">
+          <li class="mb-3 d-flex align-items-start">
+            <i class="bi bi-geo-alt-fill me-3 mt-1" style="color: #ff5e57; font-size: 1.1rem;"></i>
+            <span style="line-height: 1.5;">123 Travel Street, Coimbatore, Tamil Nadu</span>
+          </li>
+          <li class="mb-3 d-flex align-items-center">
+            <i class="bi bi-envelope-fill me-3" style="color: #ff5e57; font-size: 1.1rem;"></i>
+            <span>contact@smarttravel.com</span>
+          </li>
+          <li class="d-flex align-items-center">
+            <i class="bi bi-telephone-fill me-3" style="color: #ff5e57; font-size: 1.1rem;"></i>
+            <span>+91 98765 43210</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <hr style="border-color: rgba(255,255,255,0.1); margin: 2.5rem 0 1.5rem;">
+    <!-- Centered Copyright -->
+    <div class="row">
+      <div class="col-12 text-center">
+        <p style="opacity: 0.7; margin: 0;">© 2025 SmartTravel. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  /* Footer Specific Styles */
+  .footer-title {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    position: relative;
+    padding-bottom: 10px;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+  }
+  
+  .footer-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 50px;
+    height: 2px;
+    background: #ff5e57;
+  }
+  
+  .social-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    color: white;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+  }
+  
+  .social-btn:hover {
+    background: #ff5e57;
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 4px 8px rgba(255, 94, 87, 0.3);
+  }
+  
+  .newsletter .form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 94, 87, 0.25);
+    border-color: #ff5e57;
+    background: #2a2e42;
+    color: white;
+  }
+  
+  .newsletter .btn {
+    transition: all 0.3s ease;
+  }
+  
+  .newsletter .btn:hover {
+    background: #e74c3c !important;
+    transform: scale(1.05);
+  }
+  
+  .contact-list li {
+    margin-bottom: 1.2rem;
+    transition: all 0.3s ease;
+  }
+  
+  .contact-list li:hover {
+    transform: translateX(5px);
+  }
+  
+  .contact-list li:hover i {
+    transform: scale(1.1);
+  }
+  
+  @media (max-width: 992px) {
+    .newsletter {
+      margin: 2rem 0;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .social-icons-container {
+      margin-top: 1.5rem;
+    }
+  }
+</style>
+
+<script>
+  function setupMealCheckboxListeners() {
+    document.querySelectorAll('.meal-checkbox').forEach((checkbox) => {
+      checkbox.addEventListener('change', function () {
+        const card = this.closest('.card-body');
+        const nearbyBtn = card.querySelector('.nearby-btn');
+        const bookBtn = card.querySelector('.book-btn');
+        const bookMealBtn = card.querySelector('.book-meal-btn');
+
+        if (this.checked) {
+          nearbyBtn.style.display = 'none';
+          bookBtn.style.display = 'none';
+          bookMealBtn.style.display = 'inline-block';
+        } else {
+          nearbyBtn.style.display = 'inline-block';
+          bookBtn.style.display = 'inline-block';
+          bookMealBtn.style.display = 'none';
+        }
+      });
+    });
+  }
+
+  setupMealCheckboxListeners();
+
+  // Add click handlers for Book Now buttons
+  document.querySelectorAll('.book-btn').forEach((btn) => {
+    btn.addEventListener('click', function() {
+      const hotelCard = this.closest('.hotel-card-wrapper') || this.closest('.card');
+      if (!hotelCard) {
+        window.location.href = 'hotel1.html';
+        return;
+      }
+      const hotelName = hotelCard.getAttribute('data-name') || 'Hotel';
+      // Navigate to hotel1.html (or you can create specific hotel pages)
+      window.location.href = 'hotel1.html?hotel=' + encodeURIComponent(hotelName);
+    });
+  });
+
+  document.getElementById('sortBy').addEventListener('change', () => filterAndSort());
+  document.getElementById('filterName').addEventListener('input', () => filterAndSort());
+  document.getElementById('filterType').addEventListener('change', () => filterAndSort());
+  document.getElementById('filterLocation').addEventListener('change', () => filterAndSort());
+  document.getElementById('filterPrice').addEventListener('change', () => filterAndSort());
+
+  function filterAndSort() {
+    const name = document.getElementById('filterName').value.toLowerCase();
+    const type = document.getElementById('filterType').value;
+    const location = document.getElementById('filterLocation').value;
+    const priceLimit = parseInt(document.getElementById('filterPrice').value);
+    const sortBy = document.getElementById('sortBy').value;
+
+    const cards = Array.from(document.querySelectorAll('#hotelList .hotel-card-wrapper'));
+    cards.forEach(card => {
+      const hotelName = card.getAttribute('data-name').toLowerCase();
+      const hotelType = card.getAttribute('data-type');
+      const hotelLocation = card.getAttribute('data-location');
+      const hotelPrice = parseInt(card.getAttribute('data-price'));
+
+      const matchesName = !name || hotelName.includes(name);
+      const matchesType = !type || hotelType === type;
+      const matchesLocation = !location || hotelLocation === location;
+      const matchesPrice = !priceLimit || hotelPrice <= priceLimit;
+
+      card.style.display = (matchesName && matchesType && matchesLocation && matchesPrice) ? '' : 'none';
+    });
+
+    if (sortBy) {
+      cards.sort((a, b) => {
+        const priceA = parseInt(a.getAttribute('data-price'));
+        const priceB = parseInt(b.getAttribute('data-price'));
+        if (sortBy === 'priceLow') return priceA - priceB;
+        if (sortBy === 'priceHigh') return priceB - priceA;
+        return 0;
+      });
+      const list = document.getElementById('hotelList');
+      cards.forEach(card => list.appendChild(card));
+    }
+  }
+</script>
+</body>
+</html>

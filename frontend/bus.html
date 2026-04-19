@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bus Booking | SmartTravel</title>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    :root {
+      --brand: #ff5e57;
+      --brand-dark: #e74c3c;
+      --text-dark: #333333;
+    }
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(8px);
+    }
+    .navbar.scrolled {
+      background-color: #adadad;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .nav-link, .navbar-brand {
+      color: #000000 !important;
+      font-weight: 500;
+    }
+    .bus-img {
+      height: 200px;
+      object-fit: cover;
+    }
+    .price-tag {
+      font-weight: bold;
+      color: #ef5844;
+    }
+    .bus-card {
+      height: 100%;
+    }
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .filter-row > div {
+      flex: 1;
+    }
+    .card:hover {
+      transform: scale(1.03);
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 0 15px rgba(0, 128, 128, 0.4);
+    }
+    .bus-card-wrapper {
+      margin-bottom: 20px;
+    }
+    .filter-controls {
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .form-check {
+      margin-top: 10px;
+    }
+    .card .btn {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    /* =======  Footer  ======= */
+    footer {
+      background-color: #101820;
+      color: #ffffff;
+      padding: 3rem 0 1.5rem;
+    }
+    .social-icon {
+      font-size: 1.4rem;
+      margin: 0 0.6rem;
+      color: #ffffff;
+      transition: opacity 0.3s;
+    }
+    .social-icon:hover {
+      opacity: 0.75;
+    }
+    .dropdown-menu {
+      background-color: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    .dropdown-item {
+      color: rgb(33, 33, 33);
+      transition: background-color 0.3s ease;
+    }
+    .dropdown-item:hover,
+    .dropdown-item:focus {
+      background-color: rgba(255, 255, 255, 0.15);
+      color: rgb(248, 0, 0);
+    }
+    .btn-brand {
+      background-color: var(--brand);
+      color: #000000;
+      padding: 0.75rem 2rem;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 94, 87, 0.7); }
+      70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 94, 87, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 94, 87, 0); }
+    }
+    .btn-brand:hover {
+      background-color: var(--brand-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(255, 94, 87, 0.4);
+    }
+    /* Footer Specific Styles */
+    .footer-title {
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      position: relative;
+      padding-bottom: 10px;
+      display: inline-block;
+      margin-bottom: 1.5rem;
+    }
+    .footer-title::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 50px;
+      height: 2px;
+      background: #ff5e57;
+    }
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      color: white;
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
+    }
+    .social-btn:hover {
+      background: #ff5e57;
+      transform: translateY(-3px) scale(1.1);
+      box-shadow: 0 4px 8px rgba(255, 94, 87, 0.3);
+    }
+    .newsletter .form-control:focus {
+      box-shadow: 0 0 0 0.25rem rgba(255, 94, 87, 0.25);
+      border-color: #ff5e57;
+      background: #2a2e42;
+      color: white;
+    }
+    .newsletter .btn {
+      transition: all 0.3s ease;
+    }
+    .newsletter .btn:hover {
+      background: #e74c3c !important;
+      transform: scale(1.05);
+    }
+    .contact-list li {
+      margin-bottom: 1.2rem;
+      transition: all 0.3s ease;
+    }
+    .contact-list li:hover {
+      transform: translateX(5px);
+    }
+    .contact-list li:hover i {
+      transform: scale(1.1);
+    }
+    @media (max-width: 992px) {
+      .newsletter {
+        margin: 2rem 0;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(255,255,255,0.1);
+      }
+      .social-icons-container {
+        margin-top: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- =======  Navbar  ======= -->
+  <nav class="navbar navbar-expand-lg fixed-top shadow-sm">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand fw-semibold" href="#">SmartTravel</a>
+      <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav me-2">
+          <li class="nav-item">
+            <a class="nav-link" href="sample.html"><i class="bi bi-house-door"></i> Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="hotel.html"><i class="bi bi-building"></i> Hotels</a>
+          </li>
+          <li class="nav-item dropdown" style="color:black;">
+            <a class="nav-link dropdown-toggle active" href="#" id="transportDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-bus-front"></i> Transport
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="transportDropdown" style="color:black;">
+              <li><a class="dropdown-item active" href="bus.html">Bus</a></li>
+              <li><a class="dropdown-item" href="train.html">Train</a></li>
+              <li><a class="dropdown-item" href="#cab">Cab</a></li>
+              <li><a class="dropdown-item" href="#flight">Flight</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="map.html"><i class="bi bi-map"></i> Map</a></li>
+          <li class="nav-item"><a class="nav-link" href="#language"><i class="bi bi-translate"></i> Language</a></li>
+          <li class="nav-item"><a class="nav-link" href="login.html"><i class="bi bi-person-circle"></i> Login</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <br>
+  <br>
+  
+  <div class="container mt-4">
+    <h2 class="mb-4 text-center">Available Buses</h2>
+    <div class="row filter-row">
+      <div><input type="text" id="filterName" class="form-control" placeholder="Search by bus name"></div>
+      <div><select id="filterType" class="form-select"><option value="">All Types</option><option value="AC Sleeper">AC Sleeper</option><option value="Semi-Sleeper">Semi-Sleeper</option><option value="Non-AC">Non-AC</option></select></div>
+      <div><select id="filterLocation" class="form-select"><option value="">All Routes</option><option value="Chennai-Coimbatore">Chennai-Coimbatore</option><option value="Bangalore-Madurai">Bangalore-Madurai</option></select></div>
+      <div><select id="filterPrice" class="form-select"><option value="">All Prices</option><option value="500">Under ₹500</option><option value="700">Under ₹700</option><option value="900">Under ₹900</option></select></div>
+      <div><select id="sortBy" class="form-select"><option value="">Sort By</option><option value="priceLow">Price: Low to High</option><option value="priceHigh">Price: High to Low</option><option value="departure">Departure Time</option></select></div>
+    </div>
+    <br>
+    
+    <div class="row" id="busList">
+      <!-- Bus Card Template -->
+      <div class="col-md-4 mb-4 bus-card-wrapper" data-name="Luxury Coach" data-type="AC Sleeper" data-route="Chennai-Coimbatore" data-price="850" data-departure="20:30">
+        <div class="card bus-card">
+          <img src="b1.jpg" class="bus-img card-img-top" alt="Luxury Coach">
+          <div class="card-body">
+            <h5 class="card-title">Luxury Coach</h5>
+            <p class="card-text">⭐ 4.5 | AC Sleeper | Free Wi-Fi | Water Bottle</p>
+            <p class="price-tag">₹850</p>
+            <p><small class="text-muted">Departure: 8:30 PM | Arrival: 5:30 AM</small></p>
+            <div class="d-flex justify-content-between gap-2 mt-2">
+              <div class="flex-fill">
+                <a href="tb.html" class="btn btn-outline-success btn-sm w-100">Book Now</a>
+              </div>
+              <div class="flex-fill">
+                <a href="bus-details.html" class="btn btn-outline-primary btn-sm w-100">View Details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4 mb-4 bus-card-wrapper" data-name="Express Travel" data-type="Semi-Sleeper" data-route="Bangalore-Madurai" data-price="650" data-departure="21:00">
+        <div class="card bus-card">
+          <img src="b2.jpg" class="bus-img card-img-top" alt="Express Travel">
+          <div class="card-body">
+            <h5 class="card-title">Express Travel</h5>
+            <p class="card-text">⭐ 4.2 | Semi-Sleeper | USB Charging | Meals</p>
+            <p class="price-tag">₹650</p>
+            <p><small class="text-muted">Departure: 9:00 PM | Arrival: 6:00 AM</small></p>
+            <div class="d-flex justify-content-between gap-2 mt-2">
+              <div class="flex-fill">
+                <a href="confirmation.html" class="btn btn-outline-success btn-sm w-100">Book Now</a>
+              </div>
+              <div class="flex-fill">
+                <a href="bus-details.html" class="btn btn-outline-primary btn-sm w-100">View Details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4 mb-4 bus-card-wrapper" data-name="City Rider" data-type="Non-AC" data-route="Chennai-Coimbatore" data-price="500" data-departure="22:15">
+        <div class="card bus-card">
+          <img src="b3.jpg" class="bus-img card-img-top" alt="City Rider">
+          <div class="card-body">
+            <h5 class="card-title">City Rider</h5>
+            <p class="card-text">⭐ 3.8 | Non-AC | Quick Boarding | Budget Friendly</p>
+            <p class="price-tag">₹500</p>
+            <p><small class="text-muted">Departure: 10:15 PM | Arrival: 7:15 AM</small></p>
+            <div class="d-flex justify-content-between gap-2 mt-2">
+              <div class="flex-fill">
+                <a href="confirmation.html" class="btn btn-outline-success btn-sm w-100">Book Now</a>
+              </div>
+              <div class="flex-fill">
+                <a href="bus-details.html" class="btn btn-outline-primary btn-sm w-100">View Details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4 mb-4 bus-card-wrapper" data-name="Night Cruiser" data-type="AC Sleeper" data-route="Bangalore-Madurai" data-price="780" data-departure="23:30">
+        <div class="card bus-card">
+          <img src="b4.jpg" class="bus-img card-img-top" alt="Night Cruiser">
+          <div class="card-body">
+            <h5 class="card-title">Night Cruiser</h5>
+            <p class="card-text">⭐ 4.6 | AC | Recliner Seats | Silent Cabin</p>
+            <p class="price-tag">₹780</p>
+            <p><small class="text-muted">Departure: 11:30 PM | Arrival: 8:30 AM</small></p>
+            <div class="d-flex justify-content-between gap-2 mt-2">
+              <div class="flex-fill">
+                <a href="confirmation.html" class="btn btn-outline-success btn-sm w-100">Book Now</a>
+              </div>
+              <div class="flex-fill">
+                <a href="bus-details.html" class="btn btn-outline-primary btn-sm w-100">View Details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4 mb-4 bus-card-wrapper" data-name="Eco Shuttle" data-type="Non-AC" data-route="Chennai-Coimbatore" data-price="400" data-departure="06:00">
+        <div class="card bus-card">
+          <img src="b5.jpg" class="bus-img card-img-top" alt="Eco Shuttle">
+          <div class="card-body">
+            <h5 class="card-title">Eco Shuttle</h5>
+            <p class="card-text">⭐ 3.5 | Mini Bus | Ideal for Short Trips</p>
+            <p class="price-tag">₹400</p>
+            <p><small class="text-muted">Departure: 6:00 AM | Arrival: 3:00 PM</small></p>
+            <div class="d-flex justify-content-between gap-2 mt-2">
+              <div class="flex-fill">
+                <a href="confirmation.html" class="btn btn-outline-success btn-sm w-100">Book Now</a>
+              </div>
+              <div class="flex-fill">
+                <a href="bus-details.html" class="btn btn-outline-primary btn-sm w-100">View Details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4 mb-4 bus-card-wrapper" data-name="Royal Express" data-type="AC Sleeper" data-route="Bangalore-Madurai" data-price="920" data-departure="19:45">
+        <div class="card bus-card">
+          <img src="b5.jpg" class="bus-img card-img-top" alt="Royal Express">
+          <div class="card-body">
+            <h5 class="card-title">Royal Express</h5>
+            <p class="card-text">⭐ 4.7 | AC Sleeper | Premium Service | Blanket</p>
+            <p class="price-tag">₹920</p>
+            <p><small class="text-muted">Departure: 7:45 PM | Arrival: 4:45 AM</small></p>
+            <div class="d-flex justify-content-between gap-2 mt-2">
+              <div class="flex-fill">
+                <a href="confirmation.html" class="btn btn-outline-success btn-sm w-100">Book Now</a>
+              </div>
+              <div class="flex-fill">
+                <a href="bus-details.html" class="btn btn-outline-primary btn-sm w-100">View Details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <section class="text-center py-5 bg-white animate-on-scroll">
+    <h2 class="mb-3">Need other transportation options?</h2>
+    <a href="transport.html"><button class="btn btn-brand">EXPLORE MORE</button></a>
+  </section>
+  
+  <!-- ======= Enhanced Elegant Footer ======= -->
+  <footer class="pt-5 pb-4" style="background: #1c1f30; color: #fff;">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Brand Column -->
+        <div class="col-lg-4 col-md-6 order-1 mb-4 mb-md-0">
+          <div class="d-flex align-items-center mb-3">
+            <i class="bi bi-compass fs-3 me-3" style="color: #ff5e57;"></i>
+            <h4 class="m-0">SmartTravel</h4>
+          </div>
+          <p class="mb-4" style="opacity: 0.8; line-height: 1.6;">Your AI-powered travel companion for seamless journeys across Tamil Nadu.</p>
+          
+          <!-- Social Icons with WhatsApp -->
+          <div class="social-icons-container">
+            <h6 class="mb-3" style="font-weight: 500;">Connect With Us</h6>
+            <div class="d-flex">
+              <a href="https://facebook.com" target="_blank" class="social-btn me-3">
+                <i class="bi bi-facebook"></i>
+              </a>
+              <a href="https://instagram.com" target="_blank" class="social-btn me-3">
+                <i class="bi bi-instagram"></i>
+              </a>
+              <a href="https://wa.me/919876543210" target="_blank" class="social-btn me-3">
+                <i class="bi bi-whatsapp"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Centered Travel Updates Column -->
+        <div class="col-lg-4 col-md-12 order-3 order-lg-2 mb-4 mb-md-0">
+          <div class="newsletter text-center px-3">
+            <h6 class="footer-title mb-4">Travel Updates</h6>
+            <div class="d-flex justify-content-center">
+              <div style="max-width: 400px; width: 100%;">
+                <div class="input-group mb-3">
+                  <input type="email" class="form-control py-2 px-3" placeholder="Enter your email" style="background: #2a2e42; border: 1px solid #3a3f58; color: #fff; border-radius: 8px 0 0 8px;">
+                  <button class="btn px-4" type="button" style="background: #ff5e57; color: white; border-radius: 0 8px 8px 0;">
+                    <i class="bi bi-send-fill"></i>
+                  </button>
+                </div>
+                <small class="d-block" style="opacity: 0.6; font-size: 0.85rem;">Get exclusive travel deals and updates</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Column -->
+        <div class="col-lg-4 col-md-6 order-2 order-lg-3 mb-4 mb-md-0">
+          <h6 class="footer-title mb-4">Contact Us</h6>
+          <ul class="list-unstyled contact-list">
+            <li class="mb-3 d-flex align-items-start">
+              <i class="bi bi-geo-alt-fill me-3 mt-1" style="color: #ff5e57; font-size: 1.1rem;"></i>
+              <span style="line-height: 1.5;">123 Travel Street, Coimbatore, Tamil Nadu</span>
+            </li>
+            <li class="mb-3 d-flex align-items-center">
+              <i class="bi bi-envelope-fill me-3" style="color: #ff5e57; font-size: 1.1rem;"></i>
+              <span>contact@smarttravel.com</span>
+            </li>
+            <li class="d-flex align-items-center">
+              <i class="bi bi-telephone-fill me-3" style="color: #ff5e57; font-size: 1.1rem;"></i>
+              <span>+91 98765 43210</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <hr style="border-color: rgba(255,255,255,0.1); margin: 2.5rem 0 1.5rem;">
+      <!-- Centered Copyright -->
+      <div class="row">
+        <div class="col-12 text-center">
+          <p style="opacity: 0.7; margin: 0;">© 2025 SmartTravel. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('sortBy').addEventListener('change', () => filterAndSort());
+    document.getElementById('filterName').addEventListener('input', () => filterAndSort());
+    document.getElementById('filterType').addEventListener('change', () => filterAndSort());
+    document.getElementById('filterLocation').addEventListener('change', () => filterAndSort());
+    document.getElementById('filterPrice').addEventListener('change', () => filterAndSort());
+
+    function filterAndSort() {
+      const name = document.getElementById('filterName').value.toLowerCase();
+      const type = document.getElementById('filterType').value;
+      const route = document.getElementById('filterLocation').value;
+      const priceLimit = parseInt(document.getElementById('filterPrice').value);
+      const sortBy = document.getElementById('sortBy').value;
+
+      const cards = Array.from(document.querySelectorAll('#busList .bus-card-wrapper'));
+      cards.forEach(card => {
+        const busName = card.getAttribute('data-name').toLowerCase();
+        const busType = card.getAttribute('data-type');
+        const busRoute = card.getAttribute('data-route');
+        const busPrice = parseInt(card.getAttribute('data-price'));
+
+        const matchesName = !name || busName.includes(name);
+        const matchesType = !type || busType === type;
+        const matchesRoute = !route || busRoute === route;
+        const matchesPrice = !priceLimit || busPrice <= priceLimit;
+
+        card.style.display = (matchesName && matchesType && matchesRoute && matchesPrice) ? '' : 'none';
+      });
+
+      if (sortBy) {
+        cards.sort((a, b) => {
+          const priceA = parseInt(a.getAttribute('data-price'));
+          const priceB = parseInt(b.getAttribute('data-price'));
+          const departureA = a.getAttribute('data-departure');
+          const departureB = b.getAttribute('data-departure');
+          
+          if (sortBy === 'priceLow') return priceA - priceB;
+          if (sortBy === 'priceHigh') return priceB - priceA;
+          if (sortBy === 'departure') return departureA.localeCompare(departureB);
+          return 0;
+        });
+        const list = document.getElementById('busList');
+        cards.forEach(card => list.appendChild(card));
+      }
+    }
+  </script>
+</body>
+</html>

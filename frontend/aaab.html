@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Travel Planner</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #ff5e57;
+      --primary-dark: #e74c3c;
+      --text-dark: #333333;
+      --bg-light: #f9f9f9;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: var(--bg-light);
+    }
+
+    /* Hero Section */
+    .hero {
+      background: url("https://source.unsplash.com/1600x800/?travel,nature") no-repeat center center/cover;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      color: white;
+      position: relative;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 600px;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: bold;
+    }
+
+    .search-bar {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .search-bar input {
+      flex: 1;
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+    }
+
+    .search-bar button {
+      background-color: var(--primary);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .search-bar button:hover {
+      background-color: var(--primary-dark);
+    }
+
+    /* Popular Destinations */
+    .destinations {
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .destinations h2 {
+      margin-bottom: 30px;
+      font-weight: bold;
+    }
+
+    .card img {
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      transition: 0.3s;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Footer */
+    footer {
+      background-color: #222;
+      color: white;
+      padding: 15px 0;
+      text-align: center;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Explore the World, Smarter 🌎</h1>
+      <p>Plan your perfect trip with personalized suggestions, travel routes, and more.</p>
+      <div class="search-bar">
+        <input type="text" id="destinationInput" placeholder="Enter your destination..." />
+        <button onclick="startPlanning()">Plan My Trip</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular Destinations -->
+  <section class="destinations">
+    <h2>Popular Destinations</h2>
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card" onclick="selectDestination('Ooty')">
+            <img src="https://source.unsplash.com/600x400/?ooty" class="card-img-top" alt="Ooty">
+            <div class="card-body">
+              <h5 class="card-title">Ooty</h5>
+              <p class="card-text">Beautiful hills, gardens, and tea plantations.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card" onclick="selectDestination('Goa')">
+            <img src="https://source.unsplash.com/600x400/?goa,beach" class="card-img-top" alt="Goa">
+            <div class="card-body">
+              <h5 class="card-title">Goa</h5>
+              <p class="card-text">Beaches, parties, and adventure sports.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card" onclick="selectDestination('Kodaikanal')">
+            <img src="https://source.unsplash.com/600x400/?kodaikanal" class="card-img-top" alt="Kodaikanal">
+            <div class="card-body">
+              <h5 class="card-title">Kodaikanal</h5>
+              <p class="card-text">Serene lakes, waterfalls, and mountains.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Smart Travel Planner. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    function startPlanning() {
+      const destination = document.getElementById("destinationInput").value.trim();
+      if (destination) {
+        window.location.href = `attractions.html?destination=${destination}`;
+      } else {
+        alert("Please enter a destination!");
+      }
+    }
+
+    function selectDestination(destination) {
+      window.location.href = `attractions.html?destination=${destination}`;
+    }
+  </script>
+
+</body>
+</html>

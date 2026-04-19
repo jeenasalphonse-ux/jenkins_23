@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartTravel - Bus Checkout</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --brand: #ff5e57;
+      --brand-dark: #e74c3c;
+      --text-dark: #333333;
+      --footer: #001f3f;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+      color: var(--text-dark);
+    }
+
+    header {
+      background-color: var(--brand);
+      padding: 1rem;
+      text-align: center;
+      color: white;
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    .hero-image {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .checkout-container {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .summary, .passenger-form, .confirmation {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    }
+
+    .book-now-btn {
+      background-color: var(--brand);
+      color: white;
+      font-weight: bold;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      width: 100%;
+      font-size: 1.1rem;
+    }
+
+    .book-now-btn:hover {
+      background-color: var(--brand-dark);
+    }
+
+    footer {
+      background-color: var(--footer);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .translate-btn {
+      background: transparent;
+      color: white;
+      border: 2px solid white;
+      padding: 5px 10px;
+      border-radius: 8px;
+      float: right;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    SmartTravel - Bus Checkout
+    <button class="translate-btn" onclick="translatePage()">தமிழில் மொழிபெயர்</button>
+  </header>
+
+  <div class="checkout-container">
+    <img src="https://images.unsplash.com/photo-1506466010722-395aa2bef877" class="hero-image" alt="Bus Travel" />
+
+    <div class="summary">
+      <h4>🚌 Booking Summary</h4>
+      <p><strong>Route:</strong> Coimbatore to Chennai</p>
+      <p><strong>Date:</strong> July 25, 2025</p>
+      <p><strong>Seats Selected:</strong> A1, A2</p>
+      <p><strong>Total Fare:</strong> ₹2400</p>
+    </div>
+
+    <div class="passenger-form">
+      <h4>👤 Passenger Details</h4>
+      <div class="mb-3">
+        <label for="name" class="form-label">Full Name</label>
+        <input type="text" class="form-control" id="name" placeholder="Enter your name" />
+      </div>
+      <div class="mb-3">
+        <label for="age" class="form-label">Age</label>
+        <input type="number" class="form-control" id="age" placeholder="Your age" />
+      </div>
+      <div class="mb-3">
+        <label for="gender" class="form-label">Gender</label>
+        <select class="form-control" id="gender">
+          <option>Male</option>
+          <option>Female</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="phone" class="form-label">Phone Number</label>
+        <input type="tel" class="form-control" id="phone" placeholder="e.g. +91 98765 43210" />
+      </div>
+    </div>
+
+    <div class="confirmation">
+      <button class="book-now-btn" onclick="confirmBooking()">Confirm Booking</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>📍 SmartTravel - Your Trusted Tamil Nadu Travel Partner</p>
+    <p>Contact: smarttravel@example.com | +91 98765 43210</p>
+    <p>© 2025 SmartTravel. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function confirmBooking() {
+      alert("✅ Booking Confirmed! Your ticket will be emailed shortly.");
+    }
+
+    function translatePage() {
+      document.querySelector('header').innerText = 'ஸ்மார்ட்டிராவல் - பேருந்து புக்கிங்';
+      document.querySelector('.summary h4').innerText = '🚌 புக்கிங் சுருக்கம்';
+      document.querySelector('.summary').innerHTML += '<p><strong>மொத்த கட்டணம்:</strong> ₹2400</p>';
+      document.querySelector('.passenger-form h4').innerText = '👤 பயணி விவரங்கள்';
+      document.querySelector('.book-now-btn').innerText = 'உறுதிப்படுத்தவும்';
+    }
+  </script>
+</body>
+</html>

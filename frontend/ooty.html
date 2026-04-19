@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Explore Ooty | SmartTravel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --brand: #ff5e57;
+      --brand-dark: #e74c3c;
+      --text-dark: #333333;
+    }
+
+    /* Navbar Styling */
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(8px);
+    }
+    .navbar.scrolled {
+      background-color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .nav-link, .navbar-brand {
+      color: #000 !important;
+      font-weight: 500;
+    }
+
+    /* Page Header */
+    .page-header {
+      background: url("images/ooty.jpg") center/cover no-repeat;
+      height: 350px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      font-weight: bold;
+      font-size: 2.5rem;
+      letter-spacing: 2px;
+      box-shadow: inset 0 0 0 1000px rgba(0,0,0,0.3);
+    }
+
+    /* Cards */
+    .places-section {
+      padding: 60px 30px;
+      background-color: #f9f9f9;
+    }
+
+    .card {
+      border: none;
+      border-radius: 18px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease-in-out;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .card img {
+      height: 220px;
+      object-fit: cover;
+      border-radius: 18px 18px 0 0;
+    }
+
+    .card-body {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .btn-brand {
+      background-color: var(--brand);
+      color: white;
+      font-weight: 500;
+      padding: 8px 18px;
+      border-radius: 25px;
+      transition: 0.3s;
+    }
+
+    .btn-brand:hover {
+      background-color: var(--brand-dark);
+      color: white;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .page-header {
+        font-size: 2rem;
+        height: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg fixed-top shadow-sm">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand fw-semibold" href="#">SmartTravel</a>
+      <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav me-2">
+          <li class="nav-item"><a class="nav-link" href="index.html"><i class="bi bi-house-door"></i> Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="hotel.html"><i class="bi bi-building"></i> Hotels</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="transportDropdown" role="button" data-bs-toggle="dropdown">
+              <i class="bi bi-bus-front"></i> Transport
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="transportDropdown">
+              <li><a class="dropdown-item" href="bus.html">Bus</a></li>
+              <li><a class="dropdown-item" href="train.html">Train</a></li>
+              <li><a class="dropdown-item" href="#cab">Cab</a></li>
+              <li><a class="dropdown-item" href="#flight">Flight</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="map.html"><i class="bi bi-map"></i> Map</a></li>
+          <li class="nav-item"><a class="nav-link" href="login.html"><i class="bi bi-person-circle"></i> Login</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+<br>
+<br>
+
+
+  <!-- Header -->
+  <div class="page-header">Explore Ooty</div>
+
+  <!-- Places Section -->
+  <section class="places-section container">
+    <h3 class="mb-4">Famous places in Ooty</h3>
+    <div id="ootyPlacesLoading" class="alert alert-light border d-flex align-items-center" role="alert">
+      <div class="spinner-border text-secondary me-3" role="status" style="width: 1.2rem; height: 1.2rem;"></div>
+      Loading top attractions...
+    </div>
+    <div id="ootyPlacesGrid" class="row g-4 d-none"></div>
+  </section>
+
+  <!-- Plan Section -->
+  <section class="container mb-5">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="m-0">Your Plan</h4>
+          <div>
+            <a href="itinerary.html" class="btn btn-brand btn-sm me-2">Generate Plan</a>
+            <button id="clearPlanBtn" class="btn btn-outline-secondary btn-sm me-2">Clear</button>
+            <a id="continueBtn" href="hotel.html" class="btn btn-brand btn-sm">Continue to Hotels</a>
+          </div>
+        </div>
+        <ul id="planList" class="list-group list-group-flush"></ul>
+        <small class="text-muted">Add places above to build your itinerary. You can change hotels and transport in the next steps.</small>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      document.querySelector('.navbar').classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Storage helpers
+    const PLAN_KEY = 'tripPlan';
+    function loadPlan() {
+      try { return JSON.parse(localStorage.getItem(PLAN_KEY)) || { destination: 'Ooty', places: [] }; } catch { return { destination: 'Ooty', places: [] }; }
+    }
+    function savePlan(plan) {
+      try { localStorage.setItem(PLAN_KEY, JSON.stringify(plan)); } catch {}
+    }
+
+    // Render plan list
+    function renderPlan() {
+      const plan = loadPlan();
+      const list = document.getElementById('planList');
+      list.innerHTML = '';
+      if (!plan.places.length) {
+        const li = document.createElement('li');
+        li.className = 'list-group-item';
+        li.textContent = 'No places added yet.';
+        list.appendChild(li);
+        return;
+      }
+      plan.places.forEach((p, idx) => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item d-flex justify-content-between align-items-center';
+        li.innerHTML = `<div class="d-flex align-items-center">
+            ${p.image ? `<img src="${p.image}" alt="${p.title}" class="me-2" style="width:44px;height:32px;object-fit:cover;border-radius:4px;" referrerpolicy="no-referrer">` : ''}
+            <a href="${p.url}" target="_blank" rel="noopener" class="text-decoration-none">${p.title}</a>
+          </div>
+          <button class="btn btn-sm btn-outline-danger" data-remove-idx="${idx}"><i class="bi bi-x"></i> Remove</button>`;
+        list.appendChild(li);
+      });
+    }
+
+    // Add to plan
+    function addToPlan(item) {
+      const plan = loadPlan();
+      if (!plan.places.find(p => p.title === item.title)) {
+        plan.places.push(item);
+        savePlan(plan);
+        renderPlan();
+      }
+    }
+
+    // Remove from plan (event delegation)
+    document.addEventListener('click', (e) => {
+      const idx = e.target?.getAttribute?.('data-remove-idx') || e.target?.closest?.('button[data-remove-idx]')?.getAttribute('data-remove-idx');
+      if (idx !== null && idx !== undefined) {
+        const plan = loadPlan();
+        plan.places.splice(Number(idx), 1);
+        savePlan(plan);
+        renderPlan();
+      }
+    });
+
+    // Clear plan
+    document.getElementById('clearPlanBtn').addEventListener('click', () => {
+      const plan = { destination: 'Ooty', places: [] };
+      savePlan(plan);
+      renderPlan();
+    });
+
+    // Load attractions from Wikipedia
+    const ootyCategoryCandidates = [
+      'Category:Tourist attractions in Ooty',
+      'Category:Tourist attractions in Udhagamandalam',
+      'Category:Buildings and structures in Ooty',
+      'Category:Parks in Ooty'
+    ];
+
+    async function fetchCategoryItems(categoryTitle) {
+      const url = `https://en.wikipedia.org/w/api.php?action=query&generator=categorymembers&gcmtitle=${encodeURIComponent(categoryTitle)}&gcmlimit=12&prop=pageimages|description|info|extracts&piprop=thumbnail|name&pilimit=12&pithumbsize=600&exintro=1&explaintext=1&inprop=url&format=json&origin=*`;
+      const res = await fetch(url, { headers: { 'accept': 'application/json' } });
+      if (!res.ok) throw new Error('wiki category error');
+      const data = await res.json();
+      const pages = data?.query?.pages || {};
+      const items = Object.values(pages).map(p => ({
+        title: p.title,
+        description: p.description || (p.extract ? p.extract.split('\n')[0] : ''),
+        image: p.thumbnail?.source || null,
+        url: p.fullurl || `https://en.wikipedia.org/wiki/${encodeURIComponent(p.title)}`
+      }));
+      return items;
+    }
+
+    async function fetchSummaryImage(title) {
+      try {
+        const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`, { headers: { 'accept': 'application/json' } });
+        if (!res.ok) return null;
+        const data = await res.json();
+        return data?.originalimage?.source || data?.thumbnail?.source || null;
+      } catch { return null; }
+    }
+
+    async function enrichImages(items) {
+      return Promise.all(items.map(async (it) => {
+        if (it.image) return it;
+        const img = await fetchSummaryImage(it.title);
+        return { ...it, image: img || null };
+      }));
+    }
+
+    async function loadOotyAttractions() {
+      const grid = document.getElementById('ootyPlacesGrid');
+      const loading = document.getElementById('ootyPlacesLoading');
+      try {
+        let items = [];
+        for (const cat of ootyCategoryCandidates) {
+          try {
+            const res = await fetchCategoryItems(cat);
+            if (res && res.length) { items = res; break; }
+          } catch {}
+        }
+        // Fallback to a known list if API fails
+        if (!items.length) {
+          items = [
+            { title: 'Government Botanical Garden, Ooty', url: 'https://en.wikipedia.org/wiki/Government_Botanical_Garden,_Ooty', image: null, description: 'Historic garden in Ooty.' },
+            { title: 'Ooty Lake', url: 'https://en.wikipedia.org/wiki/Ooty_Lake', image: null, description: 'Artificial lake famous for boating.' },
+            { title: 'Doddabetta', url: 'https://en.wikipedia.org/wiki/Doddabetta', image: null, description: 'Highest peak in the Nilgiris.' },
+            { title: 'Rose Garden, Ooty', url: 'https://en.wikipedia.org/wiki/Government_Rose_Garden,_Ooty', image: null, description: 'Large rose garden.' },
+            { title: 'Tea Museum, Ooty', url: 'https://en.wikipedia.org/wiki/Tea_Museum,_Ooty', image: null, description: 'Tea history and factory visit.' },
+            { title: 'Avalanche Lake', url: 'https://en.wikipedia.org/wiki/Avalanche_Lake,_Ooty', image: null, description: 'Scenic lake and reserve forest.' }
+          ];
+        }
+
+        // Try to get better, unique images per item
+        items = await enrichImages(items);
+
+        // Render cards
+        grid.innerHTML = '';
+        items.forEach(it => {
+          const col = document.createElement('div');
+          col.className = 'col-lg-4 col-md-6';
+          col.innerHTML = `
+            <div class="card">
+              ${it.image ? `<img src="${it.image}" alt="${it.title}" referrerpolicy="no-referrer">` : `<img src="images/ooty.jpg" alt="${it.title}">`}
+              <div class="card-body">
+                <h5 class="card-title">${it.title}</h5>
+                ${it.description ? `<p class="text-muted mb-2" style="min-height: 40px;">${it.description}</p>` : ''}
+                <div class="d-flex gap-2 justify-content-center">
+                  <a href="${it.url}" target="_blank" rel="noopener" class="btn btn-outline-secondary">More Info</a>
+                  <button class="btn btn-brand" data-add-title="${it.title}" data-add-url="${it.url}" ${it.image ? `data-add-image="${it.image}"` : ''}>Add to Plan</button>
+                </div>
+              </div>
+            </div>`;
+          grid.appendChild(col);
+        });
+        loading.classList.add('d-none');
+        grid.classList.remove('d-none');
+      } catch (e) {
+        loading.textContent = 'Failed to load attractions. Please try again later.';
+      }
+    }
+
+    // Event delegation for Add to Plan
+    document.addEventListener('click', (e) => {
+      const btn = e.target?.closest?.('button[data-add-title]');
+      if (!btn) return;
+      const title = btn.getAttribute('data-add-title');
+      const url = btn.getAttribute('data-add-url');
+      const image = btn.getAttribute('data-add-image');
+      addToPlan({ title, url, image });
+      btn.textContent = 'Added';
+      btn.disabled = true;
+      setTimeout(() => { btn.textContent = 'Add to Plan'; btn.disabled = false; }, 1200);
+    });
+
+    // Init
+    renderPlan();
+    loadOotyAttractions();
+  </script>
+</body>
+</html>

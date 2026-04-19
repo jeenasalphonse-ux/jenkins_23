@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Travelista Tours - Login</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #f5f7fa; padding: 20px; }
+    .container { display: flex; width: 1000px; height: 600px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); }
+    .left-panel { flex: 1.2; background: url('login1.jpg') center/cover no-repeat; color: white; padding: 40px; display: flex; flex-direction: column; justify-content: flex-end; position: relative; }
+    .airplane { position: absolute; top: 40px; right: 40px; font-size: 32px; color: white; }
+    .logo { font-size: 32px; font-weight: 700; margin-bottom: 20px; color: #fff; }
+    .quote { font-size: 22px; font-weight: 500; line-height: 1.4; margin-bottom: 30px; max-width: 400px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+    .features { list-style: none; margin-top: 20px; }
+    .features li { margin-bottom: 12px; display: flex; align-items: center; font-size: 16px; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+    .features li i { margin-right: 10px; color: #ffffff; }
+    .right-panel { flex: 1; padding: 50px; display: flex; flex-direction: column; justify-content: center; }
+    .welcome { font-size: 30px; color: #355162; margin-bottom: 10px; font-weight: 800; text-align: center; }
+    .login-text { color: #555; margin-bottom: 30px; font-size: 16px; }
+    .input-group { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 8px; color: #0e093b; font-weight: 500; }
+    input { width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; transition: border 0.3s; }
+    input:focus { border-color: #355162; outline: none; }
+    .forgot-password { text-align: right; margin-bottom: 25px; }
+    .forgot-password a { color: #355162; text-decoration: none; font-size: 14px; }
+    .forgot-password a:hover { text-decoration: underline; }
+    .login-btn { background: #355162; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.3s; width: 100%; }
+    .login-btn:hover { background: #2a4050; }
+    .divider { text-align: center; margin: 25px 0; color: #777; position: relative; }
+    .divider::before, .divider::after { content: ""; position: absolute; top: 50%; width: 42%; height: 1px; background: #ddd; }
+    .divider::before { left: 0; }
+    .divider::after { right: 0; }
+    .social-login { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
+    .social-btn { padding: 15px 25px; border: 1px solid #ddd; border-radius: 8px; background: white; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 12px; font-weight: 500; width: 150px; justify-content: center; font-size: 16px; }
+    .social-btn.google i { color: #DB4437; }
+    .social-btn.github i { color: #333; }
+    .social-btn:hover { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); transform: translateY(-2px); }
+    .register { text-align: center; margin-top: 20px; color: #555; }
+    .register a { color: #355162; text-decoration: none; font-weight: 600; }
+    .register a:hover { text-decoration: underline; }
+    @media (max-width: 900px) { .container { flex-direction: column; height: auto; width: 100%; max-width: 500px; } .left-panel { padding: 30px; text-align: center; } .features { text-align: left; } }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="left-panel">
+        <div class="airplane"><i class="fas fa-plane"></i></div>
+        <div class="logo">Travelista Tours</div>
+        <div class="quote">Travel is the only purchase that enriches you in ways beyond material wealth</div>
+        <ul class="features">
+            <li><i class="fas fa-check-circle"></i> Discover amazing destinations worldwide</li>
+            <li><i class="fas fa-check-circle"></i> Personalized travel experiences</li>
+            <li><i class="fas fa-check-circle"></i> Best price guarantee</li>
+            <li><i class="fas fa-check-circle"></i> 24/7 customer support</li>
+        </ul>
+    </div>
+    
+    <div class="right-panel">
+        <h1 class="welcome">Welcome Login Here</h1>
+        <div class="input-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="thisuk@mail.com">
+        </div>
+        <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="***********">
+        </div>
+        <div class="forgot-password">
+            <a href="#">Forget your password?</a>
+        </div>
+        <button class="login-btn">LOGIN</button>
+        <div class="divider">OR</div>
+        <div class="social-login">
+            <button class="social-btn google">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" width="22" height="22">
+                Google
+            </button>
+            <button class="social-btn github">
+                <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub" width="20" height="20">
+                GitHub
+            </button>
+        </div>
+        <div class="register">
+            Don't have account? <a href="/signup">Register Now</a>
+        </div>
+    </div>
+</div>
+
+<script>
+document.querySelector('.login-btn').addEventListener('click', async function() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    if (!email || !password) {
+        alert('Please fill in all fields');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert('Login successful! Welcome, ' + data.name);
+            window.location.href = '/home';  // Redirect to home page
+        } else {
+            alert(data.message || 'Login failed');
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Error connecting to server');
+    }
+});
+
+document.querySelectorAll('.social-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const platform = this.classList.contains('google') ? 'Google' : 'GitHub';
+        alert(`Logging in with ${platform} (not implemented)`);
+    });
+});
+</script>
+</body>
+</html>

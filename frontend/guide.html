@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tour Guides - Ooty & Kodaikanal | SmartTravel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        :root {
+            --brand: #ff5e57;
+            --brand-dark: #e74c3c;
+            --text-dark: #333333;
+            --light-bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-top: 70px; /* To account for fixed navbar */
+        }
+
+         :root {
+      --brand: #ff5e57;
+      --brand-dark: #e74c3c;
+      --text-dark: #333333;
+    }
+   .navbar {
+      background-color: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(8px);
+    }
+    .navbar.scrolled {
+      background-color: #adadad;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .nav-link, .navbar-brand {
+      color: #000000 !important;
+      font-weight: 500;
+    }
+
+        .back-btn {
+            position: fixed;
+            top: 85px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            border-radius: 50px;
+            padding: 10px 15px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .back-btn:hover {
+            background: var(--brand);
+            transform: translateX(-5px);
+        }
+
+        .hero-section {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: rgb(33, 31, 31);
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        .stats-section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 25px;
+            border-radius: 12px;
+            background: var(--light-bg);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--brand);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 50px;
+            font-weight: 700;
+            color: var(--text-dark);
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--brand);
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+
+        .guides-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .guide-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .guide-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .guide-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .guide-card:hover .guide-image {
+            transform: scale(1.05);
+        }
+
+        .guide-info {
+            padding: 20px;
+        }
+
+        .guide-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .guide-specialty {
+            color: var(--brand);
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            display: inline-block;
+            background: rgba(255, 94, 87, 0.1);
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        .guide-details {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .guide-details p {
+            margin-bottom: 5px;
+        }
+
+        .guide-location {
+            background: #e8f4f8;
+            color: #2c3e50;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-block;
+            font-weight: 500;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 700px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close:hover {
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-guide-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .modal-guide-name {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .modal-guide-specialty {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .detail-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--brand);
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .detail-value {
+            color: #555;
+            font-size: 1rem;
+        }
+
+        .contact-btn {
+            background: linear-gradient(to right, var(--brand), var(--brand-dark));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 30px auto 0;
+            font-size: 1rem;
+            box-shadow: 0 5px 15px rgba(255, 94, 87, 0.3);
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 94, 87, 0.4);
+        }
+
+        /* Footer Styles */
+        .footer {
+            background-color: #12142c;
+            color: white;
+            padding: 50px 0 20px;
+        }
+
+        .footer h5 {
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer a:hover {
+            color: var(--brand);
+            text-decoration: none;
+        }
+
+        .footer .social-icon {
+            font-size: 1.2rem;
+            color: white;
+            margin-right: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .footer .social-icon:hover {
+            color: var(--brand);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            margin-top: 30px;
+        }
+
+        /* Contact Modal Styles */
+        .contact-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .contact-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        .contact-value {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                height: 180px;
+            }
+            
+            .hero-title {
+                font-size: 1.8rem;
+            }
+            
+            .stats-section {
+                padding: 30px 20px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+            
+            .modal-guide-name {
+                font-size: 1.5rem;
+            }
+            
+            .modal-guide-specialty {
+                font-size: 1rem;
+            }
+
+            .back-btn {
+                top: 75px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .back-btn {
+                top: 70px;
+                left: 15px;
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .hero-section {
+                height: 160px;
+                margin-bottom: 30px;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+                margin-bottom: 30px;
+            }
+            
+            .guides-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .footer {
+                padding: 30px 0 15px;
+            }
+
+            .navbar-brand {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg fixed-top shadow-sm">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand fw-semibold" href="#">SmartTravel</a>
+    <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav me-2">
+        <li class="nav-item">
+          <a class="nav-link" href="sample.html"><i class="bi bi-house-door"></i> Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="hotel.html"><i class="bi bi-building"></i> Hotels</a>
+        </li>
+        <li class="nav-item dropdown" style="color:black;">
+          <a class="nav-link dropdown-toggle" href="#" id="transportDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-bus-front"></i> Transport
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="transportDropdown" style="color:black;">
+            <li><a class="dropdown-item" href="bus.html">Bus</a></li>
+            <li><a class="dropdown-item" href="train.html">Train</a></li>
+            <li><a class="dropdown-item" href="#cab">Cab</a></li>
+            <li><a class="dropdown-item" href="#flight">Flight</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="map.html"><i class="bi bi-map"></i> Map</a></li>
+        <li class="nav-item"><a class="nav-link" href="#language"><i class="bi bi-translate"></i> Language</a></li>
+        <li class="nav-item"><a class="nav-link" href="login.html"><i class="bi bi-person-circle"></i> Login</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <button class="back-btn" onclick="window.location.href='hotel.html'">
+        <i class="fas fa-arrow-left me-2"></i>Back
+    </button>
+
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">Professional Tour Guides</h1>
+            <p class="hero-subtitle">Discover Ooty & Kodaikanal with our certified local experts</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="row">
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="stat-item">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Expert Guides</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="stat-item">
+                        <div class="stat-number">2</div>
+                        <div class="stat-label">Hill Stations</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="stat-item">
+                        <div class="stat-number">5k+</div>
+                        <div class="stat-label">Happy Travelers</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="stat-item">
+                        <div class="stat-number">4.8</div>
+                        <div class="stat-label">Average Rating</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Guides Section -->
+        <h2 class="section-title">Meet Our Guides</h2>
+        <div class="guides-grid" id="guidesGrid">
+            <!-- Guide cards will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="pt-5 pb-4" style="background: #1c1f30; color: #fff;">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Brand Column -->
+                <div class="col-lg-4 col-md-6 order-1 mb-4 mb-md-0">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-compass fs-3 me-3" style="color: #ff5e57;"></i>
+                        <h4 class="m-0">SmartTravel</h4>
+                    </div>
+                    <p class="mb-4" style="opacity: 0.8; line-height: 1.6;">Your AI-powered travel companion for seamless journeys across Tamil Nadu.</p>
+                    
+                    <!-- Social Icons with WhatsApp -->
+                    <div class="social-icons-container">
+                        <h6 class="footer-title mb-3">Connect With Us</h6>
+                        <div class="d-flex">
+                            <a href="https://facebook.com" target="_blank" class="social-btn me-3">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="https://instagram.com" target="_blank" class="social-btn me-3">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="https://wa.me/919876543210" target="_blank" class="social-btn me-3">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Centered Travel Updates Column -->
+                <div class="col-lg-4 col-md-12 order-3 order-lg-2 mb-4 mb-md-0">
+                    <div class="newsletter text-center px-3">
+                        <h6 class="footer-title mb-4">Travel Updates</h6>
+                        <div class="d-flex justify-content-center">
+                            <div style="max-width: 400px; width: 100%;">
+                                <div class="input-group mb-3">
+                                    <input type="email" class="form-control py-2 px-3" placeholder="Enter your email" style="background: #2a2e42; border: 1px solid #3a3f58; color: #fff;">
+                                    <button class="btn px-4" type="button" style="background: #ff5e57; color: white;">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                                <small class="d-block" style="opacity: 0.6; font-size: 0.85rem;">Get exclusive travel deals and updates</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Column -->
+                <div class="col-lg-4 col-md-6 order-2 order-lg-3 mb-4 mb-md-0">
+                    <h6 class="footer-title mb-4">Contact Us</h6>
+                    <ul class="list-unstyled contact-list">
+                        <li class="mb-3 d-flex align-items-start">
+                            <i class="fas fa-map-marker-alt me-3 mt-1" style="color: #ff5e57; font-size: 1.1rem;"></i>
+                            <span style="line-height: 1.5;">123 Travel Street, Coimbatore, Tamil Nadu</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-center">
+                            <i class="fas fa-envelope me-3" style="color: #ff5e57; font-size: 1.1rem;"></i>
+                            <span>contact@smarttravel.com</span>
+                        </li>
+                        <li class="d-flex align-items-center">
+                            <i class="fas fa-phone-alt me-3" style="color: #ff5e57; font-size: 1.1rem;"></i>
+                            <span>+91 98765 43210</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr style="border-color: rgba(255,255,255,0.1); margin: 2.5rem 0 1.5rem;">
+            <!-- Centered Copyright -->
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p style="opacity: 0.7; margin: 0;">© 2025 SmartTravel. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Guide Details Modal -->
+    <div id="guideModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <img id="modalImage" class="modal-guide-image" src="" alt="">
+                <div id="modalName" class="modal-guide-name"></div>
+                <div id="modalSpecialty" class="modal-guide-specialty"></div>
+            </div>
+            <div class="modal-body">
+                <div id="modalDetails" class="detail-grid">
+                    <!-- Details will be populated by JavaScript -->
+                </div>
+                <button class="contact-btn" onclick="openContactModal()">
+                    <i class="fas fa-envelope me-2"></i>Contact Guide
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <span class="close" onclick="closeContactModal()">&times;</span>
+                <h4>Contact Guide</h4>
+                <p id="contactGuideName" class="mb-0"></p>
+            </div>
+            <div class="modal-body">
+                <div class="contact-item mb-3 p-3 bg-light rounded">
+                    <div class="d-flex align-items-center">
+                        <div class="contact-icon bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                            <i class="fas fa-phone text-white"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="contact-label">Phone</div>
+                            <div class="contact-value" id="contactPhone"></div>
+                        </div>
+                        <button class="btn btn-sm btn-primary" onclick="callGuide()">Call</button>
+                    </div>
+                </div>
+                <div class="contact-item mb-3 p-3 bg-light rounded">
+                    <div class="d-flex align-items-center">
+                        <div class="contact-icon bg-danger rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                            <i class="fas fa-envelope text-white"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="contact-label">Email</div>
+                            <div class="contact-value" id="contactEmail"></div>
+                        </div>
+                        <button class="btn btn-sm btn-danger" onclick="emailGuide()">Email</button>
+                    </div>
+                </div>
+                <div class="contact-item p-3 bg-light rounded">
+                    <div class="d-flex align-items-center">
+                        <div class="contact-icon bg-success rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                            <i class="fab fa-whatsapp text-white"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="contact-label">WhatsApp</div>
+                            <div class="contact-value">Available for messaging</div>
+                        </div>
+                        <button class="btn btn-sm btn-success" onclick="whatsappGuide()">Message</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const guides = [
+            {
+                id: 1,
+                name: "Rajesh Kumar",
+                specialty: "Cultural Heritage Tours",
+                languages: "English, Hindi, Tamil",
+                experience: "8 years",
+                region: "Ooty",
+                location: "Coimbatore, Tamil Nadu",
+                contact: "9448825881",
+                email: "rajesh.k@gmail.com",
+                image: "images/g1.jpg",
+                description: "Specializes in cultural heritage tours around Ooty's tea estates and tribal villages. Rajesh has deep knowledge of local traditions and can arrange unique cultural experiences."
+            },
+            {
+                id: 2,
+                name: "Priya Venkat",
+                specialty: "Historical Walks",
+                languages: "English, Tamil, Malayalam",
+                experience: "6 years",
+                region: "Kodaikanal",
+                location: "Madurai, Tamil Nadu",
+                contact: "9344825575",
+                email: "priya.v@gmail.com",
+                image: "images/g6.jpg",
+                description: "Expert in historical landmarks and colonial architecture of Kodaikanal. Priya brings history to life with engaging stories and hidden gems."
+            },
+            {
+                id: 3,
+                name: "Arun Mehta",
+                specialty: "Adventure Tours",
+                languages: "English, Hindi",
+                experience: "10 years",
+                region: "Ooty",
+                location: "Nilgiris, Tamil Nadu",
+                contact: "9655881234",
+                email: "arun.m@gmail.com",
+                image: "images/g3.jpg",
+                description: "Adventure guide for trekking, mountain biking and outdoor activities in Ooty hills. Certified in wilderness first aid."
+            },
+            {
+                id: 4,
+                name: "Deepa Nair",
+                specialty: "Culinary Tours",
+                languages: "Tamil, English, Malayalam",
+                experience: "5 years",
+                region: "Kodaikanal",
+                location: "Dindigul, Tamil Nadu",
+                contact: "9876543210",
+                email: "deepa.n@gmail.com",
+                image: "images/g4.jpg",
+                description: "Food expert specializing in local cuisine and traditional cooking experiences. Deepa can arrange visits to organic farms and cooking demonstrations."
+            },
+            {
+                id: 5,
+                name: "Vijay Anand",
+                specialty: "Nature & Wildlife",
+                languages: "Tamil, English",
+                experience: "7 years",
+                region: "Ooty",
+                location: "Salem, Tamil Nadu",
+                contact: "9123456789",
+                email: "vijay.a@gmail.com",
+                image: "images/g2.jpg",
+                description: "Nature conservation expert with deep knowledge of local flora and fauna. Vijay leads bird watching tours and nature photography expeditions."
+            },
+            {
+                id: 6,
+                name: "Ananya Singh",
+                specialty: "Photography Tours",
+                languages: "English, Hindi",
+                experience: "4 years",
+                region: "Kodaikanal",
+                location: "Trichy, Tamil Nadu",
+                contact: "9987654321",
+                email: "ananya.s@gmail.com",
+                image: "images/g5.jpg",
+                description: "Professional photographer offering scenic photography tours and workshops. Ananya knows all the best spots for capturing Kodaikanal's beauty."
+            }
+        ];
+
+        let currentGuide = null;
+
+        function renderGuides() {
+            const guidesGrid = document.getElementById('guidesGrid');
+            guidesGrid.innerHTML = guides.map(guide => `
+                <div class="guide-card" onclick="openModal(${guide.id})">
+                    <img src="${guide.image}" alt="${guide.name}" class="guide-image">
+                    <div class="guide-info">
+                        <div class="guide-name">${guide.name}</div>
+                        <div class="guide-specialty">${guide.specialty}</div>
+                        <div class="guide-details">
+                            <p><strong>Experience:</strong> ${guide.experience}</p>
+                            <p><strong>Languages:</strong> ${guide.languages}</p>
+                        </div>
+                        <div class="guide-location">${guide.region}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openModal(guideId) {
+            const guide = guides.find(g => g.id === guideId);
+            currentGuide = guide;
+            const modal = document.getElementById('guideModal');
+            
+            document.getElementById('modalImage').src = guide.image;
+            document.getElementById('modalName').textContent = guide.name;
+            document.getElementById('modalSpecialty').textContent = guide.specialty;
+            
+            document.getElementById('modalDetails').innerHTML = `
+                <div class="detail-item">
+                    <div class="detail-label">Experience</div>
+                    <div class="detail-value">${guide.experience}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Languages</div>
+                    <div class="detail-value">${guide.languages}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Region</div>
+                    <div class="detail-value">${guide.region}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Location</div>
+                    <div class="detail-value">${guide.location}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Contact</div>
+                    <div class="detail-value">+91 ${guide.contact}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Email</div>
+                    <div class="detail-value">${guide.email}</div>
+                </div>
+                <div class="detail-item" style="grid-column: 1 / -1;">
+                    <div class="detail-label">About</div>
+                    <div class="detail-value">${guide.description}</div>
+                </div>
+            `;
+            
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('guideModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function openContactModal() {
+            if (!currentGuide) return;
+            
+            document.getElementById('contactGuideName').textContent = currentGuide.name;
+            document.getElementById('contactPhone').textContent = `+91 ${currentGuide.contact}`;
+            document.getElementById('contactEmail').textContent = currentGuide.email;
+            
+            document.getElementById('contactModal').style.display = 'block';
+        }
+
+        function closeContactModal() {
+            document.getElementById('contactModal').style.display = 'none';
+        }
+
+        function callGuide() {
+            if (currentGuide) {
+                window.open(`tel:+91${currentGuide.contact}`);
+            }
+        }
+
+        function emailGuide() {
+            if (currentGuide) {
+                window.open(`mailto:${currentGuide.email}?subject=Tour Guide Inquiry&body=Hi ${currentGuide.name}, I'm interested in your ${currentGuide.specialty.toLowerCase()} services.`);
+            }
+        }
+
+        function whatsappGuide() {
+            if (currentGuide) {
+                const message = `Hi ${currentGuide.name}, I'm interested in your ${currentGuide.specialty.toLowerCase()} services in ${currentGuide.region}. Could you please share more details?`;
+                window.open(`https://wa.me/91${currentGuide.contact}?text=${encodeURIComponent(message)}`);
+            }
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('guideModal');
+            const contactModal = document.getElementById('contactModal');
+            
+            if (event.target === modal) {
+                closeModal();
+            }
+            if (event.target === contactModal) {
+                closeContactModal();
+            }
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderGuides();
+        });
+    </script>
+</body>
+</html>
