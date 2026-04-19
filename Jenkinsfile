@@ -12,14 +12,14 @@ pipeline {
 
         stage('Build Images') {
             steps {
-                sh 'docker-compose build'
+                sh 'docker compose build'
             }
         }
 
         stage('Restart App') {
             steps {
-                sh 'docker-compose down'
-                sh 'docker-compose up -d'
+                sh 'docker compose down || true'
+                sh 'docker compose up -d'
             }
         }
     }
