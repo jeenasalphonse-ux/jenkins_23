@@ -10,16 +10,21 @@ pipeline {
             }
         }
 
-        stage('Build Images') {
+        stage('Check Docker') {
             steps {
-                sh 'docker compose build'
+                sh 'docker --version || true'
             }
         }
 
-        stage('Restart App') {
+        stage('Build (Safe Mode)') {
             steps {
-                sh 'docker compose down || true'
-                sh 'docker compose up -d'
+                sh 'echo "Docker build skipped for now - environment setup needed"'
+            }
+        }
+
+        stage('Deploy (Safe Mode)') {
+            steps {
+                sh 'echo "Deployment skipped for now"'
             }
         }
     }
