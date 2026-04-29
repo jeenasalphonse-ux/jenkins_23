@@ -1,31 +1,49 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+    }
+
     stages {
 
-        stage('Checkout') {
+        stage('Clone Repository') {
             steps {
-                git branch: 'main',
-                url: 'https://github.com/jeenasalphonse-ux/travel_pp.git'
+                git branch: 'main', url: 'https://github.com/YOUR_USERNAME/YOUR_REPO.git'
             }
         }
 
-        stage('Check Docker') {
+        stage('Build Docker Images') {
             steps {
-                sh 'docker --version || true'
+                sh 'docker compose build'
             }
         }
 
-        stage('Build (Safe Mode)') {
+        stage('Stop Old Containers') {
             steps {
-                sh 'echo "Docker build skipped for now - environment setup needed"'
+                sh 'docker compose down'
             }
         }
 
-        stage('Deploy (Safe Mode)') {
+        stage('Run Containers') {
             steps {
-                sh 'echo "Deployment skipped for now"'
+                sh 'docker compose up -d'
             }
+        }
+
+        stage('Check Running Containers') {
+            steps {
+                sh 'docker ps'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Deployment Successful!'
+        }
+        failure {
+            echo '❌ Build Failed!'
         }
     }
 }
