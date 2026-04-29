@@ -9,15 +9,20 @@ pipeline {
             }
         }
 
-        stage('Build Images') {
+        stage('Clean Old Containers') {
             steps {
-                bat 'docker compose build'
+                bat '''
+                docker compose down || exit 0
+                docker rm -f travel-mongo || exit 0
+                docker rm -f travel-backend || exit 0
+                docker rm -f travel-frontend || exit 0
+                '''
             }
         }
 
-        stage('Stop Old Containers') {
+        stage('Build Images') {
             steps {
-                bat 'docker compose down'
+                bat 'docker compose build'
             }
         }
 
@@ -31,6 +36,15 @@ pipeline {
             steps {
                 bat 'docker ps'
             }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Deployment Successful!'
+        }
+        failure {
+            echo '❌ Build Failed!'
         }
     }
 }
