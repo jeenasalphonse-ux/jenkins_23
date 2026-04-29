@@ -1,0 +1,33 @@
+services:
+
+  frontend:
+    build: ./frontend
+    platform: linux/amd64
+    container_name: travel-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    platform: linux/amd64
+    container_name: travel-backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:6
+    platform: linux/amd64
+    container_name: travel-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
