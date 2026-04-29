@@ -1,19 +1,15 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_COMPOSE_FILE = 'docker-compose.yml'
-    }
-
     stages {
 
-        stage('Clone Repository') {
+        stage('Clone Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/YOUR_USERNAME/YOUR_REPO.git'
+                git branch: 'main', url: 'https://github.com/jeenasalphonse-ux/jenkins_23.git'
             }
         }
 
-        stage('Build Docker Images') {
+        stage('Build Images') {
             steps {
                 sh 'docker compose build'
             }
@@ -25,13 +21,13 @@ pipeline {
             }
         }
 
-        stage('Run Containers') {
+        stage('Deploy Containers') {
             steps {
                 sh 'docker compose up -d'
             }
         }
 
-        stage('Check Running Containers') {
+        stage('Verify') {
             steps {
                 sh 'docker ps'
             }
@@ -40,10 +36,10 @@ pipeline {
 
     post {
         success {
-            echo '✅ Deployment Successful!'
+            echo '✅ Pipeline executed successfully!'
         }
         failure {
-            echo '❌ Build Failed!'
+            echo '❌ Pipeline failed!'
         }
     }
 }
